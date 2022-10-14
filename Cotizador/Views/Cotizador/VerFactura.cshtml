@@ -1,0 +1,58 @@
+﻿
+@model IEnumerable<Factura>
+@{
+    ViewData["Title"] = "Factura";
+    int a = 0;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id Factura</th>
+            <th>Id Producto</th>
+            <th>Nombre</th>
+            <th>CodFab</th>
+            <th>CodProv</th>
+            <th>Descripcion</th>
+            <th>CodigoSat</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.ProductoId</td>
+            <td>@item.Producto.Nombre</td>
+            <td>@item.Producto.CodFab</td>
+            <td>@item.Producto.CodProv</td>
+            <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Producto.Descripcion</p></td>
+            <td>@item.Producto.CodigoSat</td>
+            <td>$@item.Producto.Precio</td>
+            <td>@item.Cantidad</td>
+            <td>@Negocios.Utilerias.FormatearDecimal.Formatear((decimal)(item.Cantidad * item.Producto.Precio))</td>
+            <td>
+                <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-success">Editar</a> |
+                <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-success">Eliminar</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+}
+
+

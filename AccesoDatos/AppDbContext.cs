@@ -11,6 +11,7 @@ namespace AccesoDatos
     public class AppDbContext: DbContext
     {
         public DbSet<Producto> Productos { get; set; }
+        public DbSet<Factura> Facturas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

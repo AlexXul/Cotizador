@@ -1,0 +1,54 @@
+﻿
+@model IEnumerable<Producto>
+@{
+    ViewData["Title"] = "Cotizador";
+}
+<a href="/Cotizador/VerFactura">Ver factura</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>CodFab</th>
+            <th>CodProv</th>
+            <th>Descripcion</th>
+            <th>CodigoSat</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+                <td>@item.CodFab</td>
+                <td>@item.CodProv</td>
+                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
+                <td>@item.CodigoSat</td>
+                <td>@item.Precio</td>
+                <td>
+                    <form asp-action="Agregar" method="get">
+                        <input type="number" name="cantidad" value="" />
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button onclick="return confirm('¿Desea agregar este Producto?')" href="@Url.Action("Agregar","Cotizador")" class="btn btn-success">Agregar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+}
+
+
