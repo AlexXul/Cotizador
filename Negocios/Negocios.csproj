@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.96.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj" />
     <ProjectReference Include="..\Entidades\Entidades.csproj" />
   </ItemGroup>

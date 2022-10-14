@@ -1,20 +1,21 @@
-﻿
-@model IEnumerable<Producto>
+﻿@model IEnumerable<Producto>
 @{
-    ViewData["Title"] = "Producto";
+    ViewData["Title"] = "Datos del Excel";
 }
-<a href="/Producto/Create">Crear</a>
+<div>
+    <h1>Datos del Excel</h1>
+</div>
 <table class="table">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Nombre</th>
             <th>CodFab</th>
             <th>CodProv</th>
             <th>Descripcion</th>
             <th>CodigoSat</th>
             <th>Precio</th>
-            <th>Acciones</th>
+
+
         </tr>
     </thead>
 
@@ -22,22 +23,17 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Id</td>
+ 
                 <td>@item.Nombre</td>
                 <td>@item.CodFab</td>
                 <td>@item.CodProv</td>
                 <td>@item.Descripcion</td>
                 <td>@item.CodigoSat</td>
-                <td>@item.Precio</td>
-
-                <td><a href="@Url.Action("Edit","Producto",new {id=item.Id })" class="btn btn-success">Editar</a>| <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Producto",new {id=item.Id })" class="btn btn-success">Eliminar</a></td>
+                <td>@item.Precio</td>               
             </tr>
         }
     </tbody>
     <tfoot>
 
     </tfoot>
-</table>  
-
-   
- 
+</table>
