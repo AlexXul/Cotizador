@@ -1,0 +1,15 @@
+﻿@model Producto
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+<section>
+    <form asp-action="Edit" method="post">
+        <input asp-for="Nombre" />
+        <input asp-for="CodFab" />
+        <input asp-for="CodProv" />
+        <input asp-for="Descripcion" />
+        <input asp-for="CodigoSat" />
+        <input asp-for="Precio" />
+        <button class="btn btn-secondary">Guardar</button>
+    </form>
+</section>

@@ -1,0 +1,48 @@
+﻿
+@model IEnumerable<Producto>
+@{
+    ViewData["Title"] = "Producto";
+}
+<a href="/Producto/Create">Crear</a>
+@foreach (var producto in Model)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>CodFab</th>
+                <th>CodProv</th>
+                <th>Descripcion</th>
+                <th>CodigoSat</th>
+                <th>Precio</th>
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+                <td>@item.CodFab</td>
+                <td>@item.CodProv</td>
+                <td>@item.Descripcion</td>
+                <td>@item.CodigoSat</td>
+                <td>@item.Precio</td>
+
+
+
+                <td><a href="@Url.Action("Edit","Producto",new {id=producto.Id })" class="btn btn-success">Editar</a>| <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Producto",new {id=producto.Id })" class="btn btn-success">Eliminar</a></td>
+            </tr>
+            }
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+   
+}
