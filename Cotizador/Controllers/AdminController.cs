@@ -3,23 +3,26 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Negocios;
-using System;
-using System.Collections;
+ 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+ 
 
 namespace CotizadorDatacom.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly LeerProducto Lector;
+        private readonly CrearRangoProducto RegistradorRango;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly LectorArchivo LectorExcel;
 
 
         public AdminController(IWebHostEnvironment hostEnvironment)
         {
+            Lector = new LeerProducto();
+            RegistradorRango = new CrearRangoProducto();
             _hostEnvironment = hostEnvironment;
             LectorExcel = new LectorArchivo();
 
@@ -43,11 +46,11 @@ namespace CotizadorDatacom.Controllers
 
             if (exito)
             {
-                ViewBag.Mensaje = "Archivo subido";
+                ViewBag.MensajeExito = "Archivo subido";
             }
             else
             {
-                ViewBag.Mensaje = "Error al subir archivo";
+                ViewBag.MensajeError = "Error al subir archivo";
             }
             return View();
         }
@@ -56,32 +59,42 @@ namespace CotizadorDatacom.Controllers
         {
             string wwwRootPath = _hostEnvironment.WebRootPath;
             string Path = "productos.xlsx";
-
-            IEnumerable<Producto> DatosLeidos =  LectorExcel.Leer(wwwRootPath+"/"+Path);
-
-         
-
+           
+            if(!System.IO.File.Exists(wwwRootPath + "/" + Path)){
+                ViewBag.Mensaje = $"No existe el archivo: {Path}";
+                return View();
+            }
+            IEnumerable<Producto> DatosLeidos = LectorExcel.Leer(wwwRootPath + "/" + Path);
             return View(DatosLeidos);
         }
 
-        
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult ExportarDatos()
         {
+            string wwwRootPath = _hostEnvironment.WebRootPath;
+            string Path = "productos.xlsx";
+
+            if (!System.IO.File.Exists(wwwRootPath + "/" + Path))
+            {
+                ViewBag.MensajeError = $"No existe el archivo: {Path}";
+                return View();
+            }
+            
+            IEnumerable<Producto> DatosLeidos = LectorExcel.Leer(wwwRootPath + "/" + Path);
+            RegistradorRango.Crear(DatosLeidos);
+
+            ViewBag.MensajeExito = $"Se agregaron {DatosLeidos.Count()} productos ala BD del archivo: {Path}";
             return View();
         }
 
- 
-        public ActionResult ExportarDatos()
-        {
-                return View();
-        }
 
+        public JsonResult Ejemplo()
+        {
+            return Json(Lector.Leer());
+        }
         private string UploadedFile(IFormFile file)
         {
             string fileName = null;
-
-
+     
             string wwwRootPath = _hostEnvironment.WebRootPath;
             string extension = Path.GetExtension(file.FileName);
             fileName = "productos"+ extension;

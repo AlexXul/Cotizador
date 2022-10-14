@@ -18,7 +18,8 @@ namespace Negocios
             foreach (IXLRow fila in HojaExcel.Rows())//recorrer las filas
             {
                 string c = fila.Cell(5).GetValue<String>();
-                if (c.Equals("Precio") || string.IsNullOrEmpty(c)) {}
+                if (c.Equals("Precio") || string.IsNullOrEmpty(c)) {
+                }
                 else
                 {
                     Producto p = new Producto
@@ -32,10 +33,6 @@ namespace Negocios
                     };
                     Productos.Add(p);
                 }
-                
-                
-                
-                
             }
             return Productos;
         }

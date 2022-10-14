@@ -26,7 +26,7 @@
                 <td>@item.Nombre</td>
                 <td>@item.CodFab</td>
                 <td>@item.CodProv</td>
-                <td>@item.Descripcion</td>
+                <td ><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
                 <td>@item.CodigoSat</td>
                 <td>@item.Precio</td>
 
@@ -38,6 +38,13 @@
 
     </tfoot>
 </table>  
+@section scripts{
+    <script>
+        $(document).ready(function () {
+             
+        });
+    </script>
+ }
 
    
  

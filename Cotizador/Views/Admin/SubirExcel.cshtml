@@ -1,9 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Subir Excel";
 }
-<div>
-    @ViewBag.Mensaje
-</div>
+<p class="text-danger">@ViewBag.MensajeError</p>
+<p class="text-success">@ViewBag.MensajeExito</p>
 <form asp-action="SubirExcel" enctype="multipart/form-data">
     <div class="form-group">
         <input type="hidden" name="name" value="dummy" />
