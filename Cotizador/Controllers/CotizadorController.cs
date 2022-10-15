@@ -3,7 +3,8 @@ using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Negocios;
-using Negocios.CrudFactura;
+using Negocios.CrudCotizacion;
+using Negocios.CrudProducto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,24 +15,24 @@ namespace Cotizador.Controllers
     public class CotizadorController : Controller
     {
         private readonly LeerProducto Lector;
-        private readonly CrearFactura CrearFactura;
-        private readonly LeerFactura LectorFactura;
-        private readonly ObtenerExistenciaProducto ObtenerExistenciaProducto;
-        private readonly EditarFactura EditarFactura;
-        private readonly EliminarFactura EliminarFactura;
-        private readonly ObtenerFactura ObtenerFactura;
-        private readonly ObtenerFacturaPorIdProducto ObtenerFacturaPorIdProducto;
+        private readonly CrearCotizacion CrearFactura;
+        private readonly LeerCotizacion LectorFactura;
+        private readonly ObtenerExistenciaProductoEnCotizacion ObtenerExistenciaProducto;
+        private readonly EditarCotizacion EditarFactura;
+        private readonly EliminarCotizacion EliminarFactura;
+        private readonly ObtenerCotizacion ObtenerFactura;
+        private readonly ObtenerCotizacionPorIdProducto ObtenerFacturaPorIdProducto;
         private readonly BuscadorProducto BuscadorProducto;
         public CotizadorController()
         {
             Lector = new LeerProducto();
-            CrearFactura = new CrearFactura();
-            LectorFactura = new LeerFactura();
-            ObtenerExistenciaProducto = new ObtenerExistenciaProducto();
-            EditarFactura = new EditarFactura();
-            EliminarFactura = new EliminarFactura();
-            ObtenerFactura = new ObtenerFactura();
-            ObtenerFacturaPorIdProducto = new ObtenerFacturaPorIdProducto();
+            CrearFactura = new CrearCotizacion();
+            LectorFactura = new LeerCotizacion();
+            ObtenerExistenciaProducto = new ObtenerExistenciaProductoEnCotizacion();
+            EditarFactura = new EditarCotizacion();
+            EliminarFactura = new EliminarCotizacion();
+            ObtenerFactura = new ObtenerCotizacion();
+            ObtenerFacturaPorIdProducto = new ObtenerCotizacionPorIdProducto();
             BuscadorProducto = new BuscadorProducto();
         }
         // GET: Cotizar
@@ -44,7 +45,7 @@ namespace Cotizador.Controllers
         public ActionResult Agregar(int cantidad, int id)
         {
             bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
-            Factura factura = new Factura { Cantidad = cantidad, ProductoId = id };
+            Cotizacion factura = new Cotizacion { Cantidad = cantidad, ProductoId = id };
 
             if (existeProductoEnFactura)
             {
@@ -60,7 +61,7 @@ namespace Cotizador.Controllers
         }
 
         // GET: Cotizar/Create
-        public ActionResult VerFactura()
+        public ActionResult Cotizacion()
         {
             return View(LectorFactura.Leer());
         }
@@ -94,7 +95,7 @@ namespace Cotizador.Controllers
             }
            
             bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
-            Factura factura = new Factura { Cantidad = cantidad, ProductoId = id };
+            Cotizacion factura = new Cotizacion { Cantidad = cantidad, ProductoId = id };
 
             if (existeProductoEnFactura)
             {

@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios.CrudFactura
+namespace Negocios.CrudCotizacion
 {
-    public class LeerFactura
+    public class LeerCotizacion
     {
-        public IEnumerable<Factura> Leer()
+        public IEnumerable<Cotizacion> Leer()
         {
             using (var dbContext = new AppDbContext())
             {
                 var consulta = from f in dbContext.Facturas
                                join p in dbContext.Productos on f.ProductoId equals p.Id
-                               select new Factura
+                               select new Cotizacion
                                {
                                    Id = f.Id,
                                    ProductoId = p.Id,

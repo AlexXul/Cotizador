@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios.CrudFactura
+namespace Negocios.CrudCotizacion
 {
-    public class ObtenerFacturaPorIdProducto
+    public class CrearCotizacion
     {
-        public Factura Obtener(int id)
+        public void Crear(Cotizacion factura)
         {
             using (var dbContext = new AppDbContext())
             {
-                var consulta = from f in dbContext.Facturas where f.ProductoId == id select f;
-                return consulta.FirstOrDefault();
+                dbContext.Facturas.Add(factura);
+                dbContext.SaveChanges();
             }
         }
     }

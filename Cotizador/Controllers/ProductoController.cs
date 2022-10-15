@@ -1,7 +1,7 @@
 ﻿using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Negocios;
+using Negocios.CrudProducto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

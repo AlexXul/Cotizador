@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios
+namespace Negocios.CrudProducto
 {
-    public class EditarProducto
+    public class EliminarProducto
     {
-        public void Editar(Producto producto)
+        public void Eliminar(Producto producto)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Productos.Update(producto);
+                dbContext.Productos.Remove(producto);
                 dbContext.SaveChanges();
             }
         }

@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace Entidades
 {
-    public class Factura
+    public class Cotizacion
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string Folio { get; set; }
+        public int ProductoId { get; set; }
+        public Producto Producto { get; set; }
 
-        public DateTime Fecha { get; set; }
+        public int Cantidad { get; set; }
+        public int SubTotal { get; set; }
+        
+        public int FacturaId { get; set; }
+        public Factura Factura { get; set; }
     }
 }

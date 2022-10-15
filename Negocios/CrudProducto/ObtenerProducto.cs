@@ -6,18 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios
+namespace Negocios.CrudProducto
 {
-   public class CrearRangoProducto
+    public class ObtenerProducto
     {
-        public void Crear(IEnumerable<Producto> productos) 
+        public Producto Obtener(int id)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Productos.AddRange(productos);
-                dbContext.SaveChanges();
+               var consulta = from p in dbContext.Productos where p.Id == id select p;
+                return consulta.FirstOrDefault();
             }
         }
-
     }
 }

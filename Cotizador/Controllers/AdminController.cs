@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Negocios;
- 
+using Negocios.CrudProducto;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

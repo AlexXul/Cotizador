@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios
+namespace Negocios.CrudCotizacion
 {
-    public class EliminarProducto
+    public class ObtenerCotizacionPorIdProducto
     {
-        public void Eliminar(Producto producto)
+        public Cotizacion Obtener(int id)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Productos.Remove(producto);
-                dbContext.SaveChanges();
+                var consulta = from f in dbContext.Facturas where f.ProductoId == id select f;
+                return consulta.FirstOrDefault();
             }
         }
     }

@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios.CrudFactura
+namespace Negocios.CrudCotizacion
 {
-    public class EliminarFactura
+    public class EditarCotizacion
     {
-        public void Eliminar(Factura factura)
+        public void Editar(Cotizacion factura)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Facturas.Remove(factura);
+                dbContext.Facturas.Update(factura);
                 dbContext.SaveChanges();
             }
         }

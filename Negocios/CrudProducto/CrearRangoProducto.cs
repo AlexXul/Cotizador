@@ -6,17 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios
+namespace Negocios.CrudProducto
 {
-   public class LeerProducto
+   public class CrearRangoProducto
     {
-        public IEnumerable<Producto> Leer()
+        public void Crear(IEnumerable<Producto> productos) 
         {
             using (var dbContext = new AppDbContext())
             {
-               var consulta = from p in dbContext.Productos select p;
-                return consulta.ToList();
+                dbContext.Productos.AddRange(productos);
+                dbContext.SaveChanges();
             }
         }
+
     }
 }

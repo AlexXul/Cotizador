@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Negocios
+namespace Negocios.CrudProducto
 {
-    public class ObtenerProducto
+   public class LeerProducto
     {
-        public Producto Obtener(int id)
+        public IEnumerable<Producto> Leer()
         {
             using (var dbContext = new AppDbContext())
             {
-               var consulta = from p in dbContext.Productos where p.Id == id select p;
-                return consulta.FirstOrDefault();
+               var consulta = from p in dbContext.Productos select p;
+                return consulta.ToList();
             }
         }
     }
