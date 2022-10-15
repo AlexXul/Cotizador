@@ -90,8 +90,9 @@ namespace Cotizador.Controllers
         {
             if (cantidad == 0 || id == 0)
             {
-                return Json(new { succes = false });
+                return Json(new { succes = false,mensaje="Verifique los datos." });
             }
+           
             bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
             Factura factura = new Factura { Cantidad = cantidad, ProductoId = id };
 

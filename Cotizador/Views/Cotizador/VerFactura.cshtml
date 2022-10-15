@@ -39,7 +39,7 @@
                 <td>@item.Producto.CodProv</td>
                 <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Producto.Descripcion</p></td>
                 <td>@item.Producto.CodigoSat</td>
-                <td>$@item.Producto.Precio</td>
+                <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
                 <td>@item.Cantidad</td>
                 <td>
                     <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-success">Editar</a> |
@@ -48,7 +48,7 @@
             </tr>
             <tr>
                 <th>Subtotal</th>
-                <td colspan="10">$@Negocios.Utilerias.FormatearDecimal.Formatear((decimal)(item.Cantidad * item.Producto.Precio))</td>
+                <td colspan="10">$@Negocios.Utilerias.FormatearDecimal.Formatear((item.Cantidad * item.Producto.Precio).ToString())</td>
             </tr>
         }
     </tbody>
@@ -61,7 +61,7 @@
     <script>
         //var tbody = $('#lista_productos tbody');
         $(document).ready(function () {
-            $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@total</td>");
+            $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(total.ToString())</td>");
 
             $("#btnExportar").click(() => {
                 var element = document.getElementById('table_factura');

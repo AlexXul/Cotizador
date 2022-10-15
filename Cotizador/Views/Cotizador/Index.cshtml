@@ -3,13 +3,28 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
-<a class="btn btn-info mb-3" href="/Cotizador/VerFactura">Ver factura</a>
-<section class="float-right">
-    <input id="producto" placeholder="Producto" />
-    <button id="btnBuscar" class="btn btn-info">Buscar</button>
-    <input disabled id="productoId" placeholder="Id" />
-    <input id="cantidad" type="number" placeholder="Cantidad" />
-    <button id="btnAgregar" class="btn btn-dark">Agregar</button>
+<section class="row">
+    <div class="col-3"><a class="btn btn-info mb-3" href="/Cotizador/VerFactura">Ver factura</a></div>
+    <div class="col-9">
+        <div class="row">
+            <div class="col-10"></div>
+            <form id="formSearch" onsubmit="buscarProducto()">
+                <input id="producto" placeholder="Producto" />
+                <button form="formSearch" id="btnBuscar" class="btn btn-info">Buscar</button>
+                <input disabled id="productoId" placeholder="Id" />
+                <input id="cantidad" type="number" placeholder="Cantidad" />
+
+            </form>
+            <div class="col-2">
+                <button id="btnAgregar" class="btn btn-dark">Agregar</button>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+<section class="">
+    
 </section>
  
  
@@ -57,7 +72,8 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $("#btnBuscar").click(function () {
+            $("#formSearch").submit(function (e) {
+                e.preventDefault()
                 $.ajax({
                     data: { buscado: $("#producto").val() },
                     type: "GET",
@@ -72,7 +88,7 @@
                             $("#producto").val(d.data.nombre);
                             $("#productoId").val(d.data.id);
                         } else {
-                            $("#productoId").val("Sin resultado");
+                            $("#productoId").val("Sin resultado.");
                         }
 
                     },
@@ -97,9 +113,8 @@
                             $("#cantidad").val("");
                             $("#productoId").val("Producto agregado");
                         } else {
-                            $("#productoId").val("Error al agregar");
-                            $("#producto").val("");
-                            $("#cantidad").val("");
+                            $("#productoId").val(d.mensaje);
+                             
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
