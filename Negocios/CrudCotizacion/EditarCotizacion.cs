@@ -10,11 +10,11 @@ namespace Negocios.CrudCotizacion
 {
     public class EditarCotizacion
     {
-        public void Editar(Cotizacion factura)
+        public void Editar(Cotizacion cotizacion)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Facturas.Update(factura);
+                dbContext.Cotizaciones.Update(cotizacion);
                 dbContext.SaveChanges();
             }
         }

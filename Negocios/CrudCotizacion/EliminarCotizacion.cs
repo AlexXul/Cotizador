@@ -10,11 +10,11 @@ namespace Negocios.CrudCotizacion
 {
     public class EliminarCotizacion
     {
-        public void Eliminar(Cotizacion factura)
+        public void Eliminar(Cotizacion cotizacion)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Facturas.Remove(factura);
+                dbContext.Cotizaciones.Remove(cotizacion);
                 dbContext.SaveChanges();
             }
         }

@@ -1,11 +1,11 @@
 ﻿
-@model IEnumerable<Factura>
+@model IEnumerable<Cotizacion>
 @{
     ViewData["Title"] = "Factura";
     float total = 0;
 }
 
-<section class="mb-3">
+<section class="mb-3" style="display:@(Model.Any()?"":"none")">
     <button class="btn btn-success" id="btnExportar">Exportar a PDF</button>
 </section>
 <table class="table" id="table_factura">

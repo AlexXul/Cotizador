@@ -10,11 +10,11 @@ namespace Negocios.CrudCotizacion
 {
     public class CrearCotizacion
     {
-        public void Crear(Cotizacion factura)
+        public void Crear(Cotizacion cotizacion)
         {
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Facturas.Add(factura);
+                dbContext.Cotizaciones.Add(cotizacion);
                 dbContext.SaveChanges();
             }
         }

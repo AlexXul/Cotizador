@@ -14,7 +14,7 @@ namespace Negocios.CrudCotizacion
         {
             using (var dbContext = new AppDbContext())
             {
-                var consulta = from f in dbContext.Facturas where f.Id == id select f;
+                var consulta = from f in dbContext.Cotizaciones where f.Id == id select f;
                 return consulta.FirstOrDefault();
             }
         }

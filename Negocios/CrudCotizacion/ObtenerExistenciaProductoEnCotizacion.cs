@@ -13,7 +13,7 @@ namespace Negocios.CrudCotizacion
         {
             using (var dbContext = new AppDbContext())
             {
-                var consulta = from f in dbContext.Facturas where f.ProductoId == id select f;
+                var consulta = from f in dbContext.Cotizaciones where f.ProductoId == id select f;
                 return consulta.Any();
             }
         }

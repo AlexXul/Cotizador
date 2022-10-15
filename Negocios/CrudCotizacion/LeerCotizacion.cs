@@ -14,7 +14,7 @@ namespace Negocios.CrudCotizacion
         {
             using (var dbContext = new AppDbContext())
             {
-                var consulta = from f in dbContext.Facturas
+                var consulta = from f in dbContext.Cotizaciones
                                join p in dbContext.Productos on f.ProductoId equals p.Id
                                select new Cotizacion
                                {
