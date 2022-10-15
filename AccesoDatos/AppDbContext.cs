@@ -11,13 +11,14 @@ namespace AccesoDatos
     public class AppDbContext: DbContext
     {
         public DbSet<Producto> Productos { get; set; }
+        public DbSet<Factura> Facturas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (!options.IsConfigured)
             {
                 string connectionString = "Data Source=LAPTOP-TU4DNU1R;Initial Catalog=DbCotizador;Integrated Security=true";
-                connectionString = "Data Source=LAPTOP-MO1HC59V;Initial Catalog=DbCotizador;Integrated Security=true";
+               // connectionString = "Data Source=LAPTOP-MO1HC59V;Initial Catalog=DbCotizador;Integrated Security=true";
                 options.UseSqlServer(connectionString);
             }
         }
