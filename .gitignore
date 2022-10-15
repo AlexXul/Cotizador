@@ -1,4 +1,5 @@
 AccesoDatos/Migrations/
+AccesoDatos/Migrations
 *.swp
 *.*~
 project.lock.json
