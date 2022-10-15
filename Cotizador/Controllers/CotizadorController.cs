@@ -1,4 +1,5 @@
-﻿using Entidades;
+﻿
+using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Negocios;
@@ -120,5 +121,6 @@ namespace Cotizador.Controllers
                 return View();
             }
         }
+        
     }
 }

@@ -31,7 +31,7 @@
                 <td>@item.Precio</td>
                 <td>
                     <form asp-action="Agregar" method="get">
-                        <input type="number" name="cantidad" value="" />
+                        <input type="number" name="cantidad" placeholder="Cantidad" value="" />
                         <input type="hidden" name="id" value="@item.Id" />
                         <button onclick="return confirm('¿Desea agregar este Producto?')" href="@Url.Action("Agregar","Cotizador")" class="btn btn-success">Agregar</button>
                     </form>
@@ -43,10 +43,11 @@
 
     </tfoot>
 </table>
+ 
 @section scripts{
     <script>
         $(document).ready(function () {
-
+             
         });
     </script>
 }

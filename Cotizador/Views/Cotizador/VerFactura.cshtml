@@ -2,13 +2,19 @@
 @model IEnumerable<Factura>
 @{
     ViewData["Title"] = "Factura";
-    int a = 0;
+    float total = 0;
 }
 
-<table class="table">
+<section class="mb-3">
+    <button class="btn btn-success" id="btnExportar">Exportar a PDF</button>
+</section>
+<table class="table" id="table_factura">
     <thead>
         <tr>
-            <th>Id Factura</th>
+            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1></th>
+        </tr>
+        <tr>
+            @*<th>Id Factura</th>*@
             <th>Id Producto</th>
             <th>Nombre</th>
             <th>CodFab</th>
@@ -17,7 +23,6 @@
             <th>CodigoSat</th>
             <th>Precio</th>
             <th>Cantidad</th>
-            <th>Subtotal</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -25,34 +30,53 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.ProductoId</td>
-            <td>@item.Producto.Nombre</td>
-            <td>@item.Producto.CodFab</td>
-            <td>@item.Producto.CodProv</td>
-            <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Producto.Descripcion</p></td>
-            <td>@item.Producto.CodigoSat</td>
-            <td>$@item.Producto.Precio</td>
-            <td>@item.Cantidad</td>
-            <td>@Negocios.Utilerias.FormatearDecimal.Formatear((decimal)(item.Cantidad * item.Producto.Precio))</td>
-            <td>
-                <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-success">Editar</a> |
-                <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-success">Eliminar</a>
-            </td>
-        </tr>
+            total += (item.Cantidad * item.Producto.Precio);
+            <tr>
+                @*<td>@item.Id</td>*@
+                <td>@item.ProductoId</td>
+                <td>@item.Producto.Nombre</td>
+                <td>@item.Producto.CodFab</td>
+                <td>@item.Producto.CodProv</td>
+                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Producto.Descripcion</p></td>
+                <td>@item.Producto.CodigoSat</td>
+                <td>$@item.Producto.Precio</td>
+                <td>@item.Cantidad</td>
+                <td>
+                    <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-success">Editar</a> |
+                    <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-success">Eliminar</a>
+                </td>
+            </tr>
+            <tr>
+                <th>Subtotal</th>
+                <td colspan="10">$@Negocios.Utilerias.FormatearDecimal.Formatear((decimal)(item.Cantidad * item.Producto.Precio))</td>
+            </tr>
         }
     </tbody>
     <tfoot>
 
     </tfoot>
 </table>
+
 @section scripts{
     <script>
+        //var tbody = $('#lista_productos tbody');
         $(document).ready(function () {
+            $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@total</td>");
 
+            $("#btnExportar").click(() => {
+                var element = document.getElementById('table_factura');
+                var opt = {
+                    margin: 1,
+                    filename: 'myfile.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+                };
+
+                // New Promise-based usage:
+                html2pdf().set(opt).from(element).save();
+            })
         });
     </script>
 }
-
 
