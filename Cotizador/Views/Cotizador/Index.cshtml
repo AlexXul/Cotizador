@@ -3,12 +3,17 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
+<section id="factura"></section>
 <section class="row">
-    <div class="col-3"><a class="btn btn-info mb-3" href="/Cotizador/Cotizacion">Ver productos en cotización</a></div>
+    <div class="col-3">
+        <a class="btn btn-info mb-3" id="ver" href="/Cotizador/Cotizacion">Ver productos en cotización</a>
+        <button id="btnCrearFactura"  class="btn btn-info mb-3">Crear factura</button>
+    </div>
+
     <div class="col-9">
         <div class="row">
             <div class="col-10"></div>
-            <form id="formSearch" onsubmit="buscarProducto()">
+            <form id="formSearch">
                 <input id="producto" placeholder="Producto" />
                 <button form="formSearch" id="btnBuscar" class="btn btn-info">Buscar</button>
                 <input disabled id="productoId" placeholder="Id" />
@@ -16,7 +21,7 @@
 
             </form>
             <div class="col-2">
-                <button id="btnAgregar" class="btn btn-dark">Agregar</button>
+                <button id="btnAgregar" class="btn btn-dark btn-add">Agregar</button>
             </div>
         </div>
         
@@ -55,10 +60,10 @@
                 <td>@item.CodigoSat</td>
                 <td>@item.Precio</td>
                 <td>
-                    <form asp-action="Agregar" method="get">
+                    <form class="form-agregar-prod" method="get" id="form-@item.Id">
                         <input type="number" name="cantidad" placeholder="Cantidad" value="" />
                         <input type="hidden" name="id" value="@item.Id" />
-                        <button onclick="return confirm('¿Desea agregar este Producto?')" href="@Url.Action("Agregar","Cotizador")" class="btn btn-success">Agregar</button>
+                        <button onclick="return confirm('¿Desea agregar este Producto?')" class="btn btn-success btn-add">Agregar</button>
                     </form>
                 </td>
             </tr>
@@ -114,7 +119,7 @@
                             $("#productoId").val("Producto agregado");
                         } else {
                             $("#productoId").val(d.mensaje);
-                             
+
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
@@ -123,6 +128,93 @@
                 });
             })
 
+
+
+            $("#btnCrearFactura").click(() => {
+                $.ajax({
+                    data: { },
+                    type: "GET",
+                    url: "@Url.Action("Crear","Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            bloquearDesbloquear();
+                        } else {
+
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            })
+
+            for (let i = 0; i < $(".form-agregar-prod").length; i++) {
+                $(".form-agregar-prod")[i].addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    $.ajax({
+                        data: { cantidad: $(".form-agregar-prod")[i].cantidad.value, id: $(".form-agregar-prod")[i].id.value },
+                    type: "GET",
+                    url: "@Url.Action("AgregarProducto","Cotizador")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            $(".form-agregar-prod")[i].cantidad.value = "";
+                        } else {
+
+
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+
+                })
+            }
+
+            $('.btn-add').attr('disabled', true);
+            $("#btnCrearFactura").attr('disabled', true);
+
+            bloquearDesbloquear();
+
+            function bloquearDesbloquear() {
+                $.ajax({
+                        data: {},
+                    type: "GET",
+                    url: "@Url.Action("ObtenerInfoUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            $("#factura").html("<p>Estado: " + d.factura.finalizado + "</p>" + "<p>folio: " + d.factura.folio + "</p>");
+                            if (!d.factura.finalizado) {
+                                $('.btn-add').attr('disabled', false);
+                                $("#btnCrearFactura").attr('disabled', true);
+                            } else {
+                                $("#btnCrearFactura").attr('disabled', false);
+                            }
+
+                        } else {
+
+                            $("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
         })
 
     </script>

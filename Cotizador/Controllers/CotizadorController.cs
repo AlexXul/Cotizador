@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Negocios;
 using Negocios.CrudCotizacion;
+using Negocios.CrudFactura;
 using Negocios.CrudProducto;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ namespace Cotizador.Controllers
         private readonly ObtenerCotizacion ObtenerFactura;
         private readonly ObtenerCotizacionPorIdProducto ObtenerFacturaPorIdProducto;
         private readonly BuscadorProducto BuscadorProducto;
+        private readonly ObtenerUltimaFactura ObtenerUltimaFactura;
         public CotizadorController()
         {
             Lector = new LeerProducto();
@@ -34,6 +36,7 @@ namespace Cotizador.Controllers
             ObtenerFactura = new ObtenerCotizacion();
             ObtenerFacturaPorIdProducto = new ObtenerCotizacionPorIdProducto();
             BuscadorProducto = new BuscadorProducto();
+            ObtenerUltimaFactura = new ObtenerUltimaFactura();
         }
         // GET: Cotizar
         public ActionResult Index()
@@ -44,6 +47,8 @@ namespace Cotizador.Controllers
         // GET: Cotizar/Details/5
         public ActionResult Agregar(int cantidad, int id)
         {
+            int idFactura = ObtenerUltimaFactura.Obtener().Id;
+
             bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
             Cotizacion factura = new Cotizacion { Cantidad = cantidad, ProductoId = id };
 
@@ -55,6 +60,7 @@ namespace Cotizador.Controllers
             }
             else
             {
+                factura.FacturaId = idFactura;
                 CrearFactura.Crear(factura);
             }
             return RedirectToAction("Index");
@@ -89,6 +95,8 @@ namespace Cotizador.Controllers
         }
         public JsonResult AgregarProducto(int cantidad, int id)
         {
+            int idFactura = ObtenerUltimaFactura.Obtener().Id;
+
             if (cantidad == 0 || id == 0)
             {
                 return Json(new { succes = false,mensaje="Verifique los datos." });
@@ -105,6 +113,7 @@ namespace Cotizador.Controllers
             }
             else
             {
+                factura.FacturaId = idFactura;
                 CrearFactura.Crear(factura);
             }
      

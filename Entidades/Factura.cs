@@ -15,5 +15,7 @@ namespace Entidades
         public string Folio { get; set; }
 
         public DateTime Fecha { get; set; }
+
+        public bool Finalizado { get; set; } = false;
     }
 }
