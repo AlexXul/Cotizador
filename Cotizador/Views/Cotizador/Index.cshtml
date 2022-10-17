@@ -3,7 +3,21 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
-<section id="factura"></section>
+<div>
+    <div id="alerta">
+        <p class="p-2" id="alert-text"></p>
+    </div>
+</div>
+<div class="card mb-4">
+    <div class="card-header">
+        Factura
+    </div>
+    <div class="card-body">
+        <p class="card-text" id="fact-folio"></p>
+        <p class="card-text" id="fact-state"></p>
+    </div>
+</div>
+
 <section class="row">
     <div class="col-3">
         <a class="btn btn-info mb-3" id="ver" href="/Cotizador/Cotizacion">Ver productos en cotización</a>
@@ -116,7 +130,9 @@
                         if (d.succes) {
                             $("#producto").val("");
                             $("#cantidad").val("");
-                            $("#productoId").val("Producto agregado");
+                            $("#productoId").val("");
+                            showMensaje("Producto agregado");
+                            
                         } else {
                             $("#productoId").val(d.mensaje);
 
@@ -166,6 +182,7 @@
                     },
                     success: function (d) {
                         if (d.succes) {
+                            showMensaje("Producto agregado");
                             $(".form-agregar-prod")[i].cantidad.value = "";
                         } else {
 
@@ -197,7 +214,8 @@
                     },
                     success: function (d) {
                         if (d.succes) {
-                            $("#factura").html("<p>Estado: " + d.factura.finalizado + "</p>" + "<p>folio: " + d.factura.folio + "</p>");
+                            $("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            $("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
                             if (!d.factura.finalizado) {
                                 $('.btn-add').attr('disabled', false);
                                 $("#btnCrearFactura").attr('disabled', true);
@@ -215,7 +233,23 @@
                     }
                 });
             }
+
+
+            $("#alerta").css("display", "none");
+            function showMensaje(text) {
+                $("#alerta").css("display","");
+                $("#alert-text").html(text);
+                ocultarAlert()
+            }
+            function ocultarAlert() {
+                setTimeout(function () {
+                    $("#alerta").css("display", "none");
+                    $("#alert-text").html("");
+                }, 3000);
+
+            }
         })
 
+        
     </script>
 }

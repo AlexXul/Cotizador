@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Negocios\Negocios.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\npm\" />
+  </ItemGroup>
+
 </Project>
