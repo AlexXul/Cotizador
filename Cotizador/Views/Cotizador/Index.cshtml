@@ -3,11 +3,6 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
-<div>
-    <div id="alerta">
-        <p class="p-2" id="alert-text"></p>
-    </div>
-</div>
 <div class="card mb-4">
     <div class="card-header">
         Factura
@@ -16,37 +11,26 @@
         <p class="card-text" id="fact-folio"></p>
         <p class="card-text" id="fact-state"></p>
     </div>
+    <div class="card-footer text-muted">
+        <button id="btnCrearFactura" class="btn btn-info mb-3">Crear factura</button>
+        <button id="btnFinalizarFactura" class="btn btn-danger mb-3">Finalizar factura</button>
+        <a class="ver-cotizacion btn btn-info  mb-3" href="/Cotizador/Cotizacion">Ver cotización</a>
+    </div>
 </div>
 
-<section class="row">
-    <div class="col-3">
-        <a class="btn btn-info mb-3" id="ver" href="/Cotizador/Cotizacion">Ver productos en cotización</a>
-        <button id="btnCrearFactura"  class="btn btn-info mb-3">Crear factura</button>
-    </div>
-
-    <div class="col-9">
+<section class="row mb-4">
+    <form id="formSearch" class="col-8">
         <div class="row">
-            <div class="col-10"></div>
-            <form id="formSearch">
-                <input id="producto" placeholder="Producto" />
-                <button form="formSearch" id="btnBuscar" class="btn btn-info">Buscar</button>
-                <input disabled id="productoId" placeholder="Id" />
-                <input id="cantidad" type="number" placeholder="Cantidad" />
-
-            </form>
-            <div class="col-2">
-                <button id="btnAgregar" class="btn btn-dark btn-add">Agregar</button>
-            </div>
+            <div class="col-3"> <input id="producto" placeholder="Producto" class="form-control" /></div>
+            <div class="col-3"><button form="formSearch" id="btnBuscar" class="btn btn-primary form-control">Buscar</button></div>
+            <div class="col-3"><input disabled id="productoId" placeholder="Id" class="form-control" /></div>
+            <div class="col-3"><input id="cantidad" type="number" placeholder="Cantidad" class="form-control" /></div>
         </div>
-        
+    </form>
+    <div class="col-4">
+        <button id="btnAgregar" class="btn btn-success btn-add form-control">Agregar</button>
     </div>
 </section>
-
-<section class="">
-    
-</section>
- 
- 
 
 <table class="table">
     <thead>
@@ -70,14 +54,20 @@
                 <td>@item.Nombre</td>
                 <td>@item.CodFab</td>
                 <td>@item.CodProv</td>
-                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
+                <td><p class="descripcion" title="@item.Descripcion">@item.Descripcion</p></td>
                 <td>@item.CodigoSat</td>
-                <td>@item.Precio</td>
+                <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Precio.ToString())</td>
                 <td>
                     <form class="form-agregar-prod" method="get" id="form-@item.Id">
-                        <input type="number" name="cantidad" placeholder="Cantidad" value="" />
+                        <div class="row">
+                            <div class="col-6">
+                                <input class="form-control " type="number" name="cantidad" placeholder="Cantidad" value="" />
+                            </div>
+                            <div class="col-6">
+                                <button onclick="return confirm('¿Desea agregar este Producto?')" class="btn btn-success btn-add form-control">Agregar</button>
+                            </div>
+                        </div> 
                         <input type="hidden" name="id" value="@item.Id" />
-                        <button onclick="return confirm('¿Desea agregar este Producto?')" class="btn btn-success btn-add">Agregar</button>
                     </form>
                 </td>
             </tr>
@@ -131,8 +121,8 @@
                             $("#producto").val("");
                             $("#cantidad").val("");
                             $("#productoId").val("");
-                            showMensaje("Producto agregado");
-                            
+                            showMensaje("Producto agregado",'success');
+
                         } else {
                             $("#productoId").val(d.mensaje);
 
@@ -158,6 +148,7 @@
                     success: function (d) {
                         if (d.succes) {
                             bloquearDesbloquear();
+                            showMensaje("Factura creada","success")
                         } else {
 
                         }
@@ -167,7 +158,28 @@
                     }
                 });
             })
+            $("#btnFinalizarFactura").click(() => {
+                $.ajax({
+                    data: { },
+                    type: "GET",
+                    url: "@Url.Action("FinalizarUltimaFactura","Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            bloquearDesbloquear();
+                            showMensaje("Factura finalizada", "info")
+                        } else {
 
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            })
             for (let i = 0; i < $(".form-agregar-prod").length; i++) {
                 $(".form-agregar-prod")[i].addEventListener("submit", (e) => {
                     e.preventDefault();
@@ -182,7 +194,7 @@
                     },
                     success: function (d) {
                         if (d.succes) {
-                            showMensaje("Producto agregado");
+                            showMensaje("Producto agregado",'success');
                             $(".form-agregar-prod")[i].cantidad.value = "";
                         } else {
 
@@ -199,7 +211,8 @@
 
             $('.btn-add').attr('disabled', true);
             $("#btnCrearFactura").attr('disabled', true);
-
+            $("#btnFinalizarFactura").attr('disabled', true);
+            $('.ver-cotizacion').attr('hidden',true);
             bloquearDesbloquear();
 
             function bloquearDesbloquear() {
@@ -219,8 +232,15 @@
                             if (!d.factura.finalizado) {
                                 $('.btn-add').attr('disabled', false);
                                 $("#btnCrearFactura").attr('disabled', true);
+                                $("#btnFinalizarFactura").attr('disabled', false);
+                                $('.btn-add').attr('disabled', false);
+                                $('.ver-cotizacion').attr('hidden', false);
                             } else {
                                 $("#btnCrearFactura").attr('disabled', false);
+                                $("#btnFinalizarFactura").attr('disabled', true);
+
+                                $('.btn-add').attr('disabled', true);
+                                $('.ver-cotizacion').attr('hidden', true);
                             }
 
                         } else {
@@ -235,21 +255,49 @@
             }
 
 
-            $("#alerta").css("display", "none");
-            function showMensaje(text) {
-                $("#alerta").css("display","");
-                $("#alert-text").html(text);
-                ocultarAlert()
-            }
-            function ocultarAlert() {
-                setTimeout(function () {
-                    $("#alerta").css("display", "none");
-                    $("#alert-text").html("");
-                }, 3000);
+
+            function showMensaje(mensaje, tipo) {
+                switch (tipo) {
+                    case 'success':
+                        iziToast.success({
+                            title: 'OK',
+                            position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                            message: mensaje,
+                        });
+                        break;
+                    case 'info':
+                        iziToast.info({
+                            title: 'Info',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'warning':
+                        iziToast.warning({
+                            title: 'Caution',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'error':
+                        iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    default:
+                        console.log('Opción incorrecta');
+                }
+
+
+
+
 
             }
+
         })
 
-        
+
     </script>
 }

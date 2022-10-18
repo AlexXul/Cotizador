@@ -85,7 +85,7 @@ namespace Cotizador.Controllers
         public ActionResult Delete(int id)
         {
             EliminarFactura.Eliminar(ObtenerFactura.Obtener(id));
-            return RedirectToAction("VerFactura");
+            return RedirectToAction("Cotizacion");
         }
 
         public JsonResult BuscarProducto (string buscado)
@@ -93,6 +93,7 @@ namespace Cotizador.Controllers
             Producto pBuscado = BuscadorProducto.Buscar(buscado);
             return Json(new{ succes=pBuscado!=null,data=pBuscado});
         }
+
         public JsonResult AgregarProducto(int cantidad, int id)
         {
             int idFactura = ObtenerUltimaFactura.Obtener().Id;

@@ -5,6 +5,6 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_PublishTargetUrl>D:\1.EjemplosProgramacion\xul\Cotizador\Cotizador\bin\Release\net5.0\publish\</_PublishTargetUrl>
-    <History>True|2022-10-16T01:11:20.5709841Z;True|2022-10-15T19:51:58.9994792-05:00;True|2022-10-13T21:09:03.0166984-05:00;</History>
+    <History>True|2022-10-17T22:58:25.0320268Z;True|2022-10-15T20:11:20.5709841-05:00;True|2022-10-15T19:51:58.9994792-05:00;True|2022-10-13T21:09:03.0166984-05:00;</History>
   </PropertyGroup>
 </Project>

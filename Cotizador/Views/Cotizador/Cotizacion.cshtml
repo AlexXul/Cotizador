@@ -37,13 +37,21 @@
                 <td>@item.Producto.Nombre</td>
                 <td>@item.Producto.CodFab</td>
                 <td>@item.Producto.CodProv</td>
-                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Producto.Descripcion</p></td>
+                <td><p class="descripcion" title="@item.Producto.Descripcion">@item.Producto.Descripcion</p></td>
                 <td>@item.Producto.CodigoSat</td>
                 <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
                 <td>@item.Cantidad</td>
                 <td>
-                    <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-success">Editar</a> |
-                    <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-success">Eliminar</a>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-primary form-control">Editar</a>
+                        </div>
+                        <div class="col-6">
+                            <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control">Eliminar</a>
+                        </div>
+                    </div>
+                     
+                    
                 </td>
             </tr>
             <tr>

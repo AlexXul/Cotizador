@@ -71,12 +71,10 @@ body {
 }
 
 /*personalización */
-.noty_layout {
-    
-}
-#alerta {
-    background-color: #00BCC4;
-    width:200px;
-    min-height:50px;
-    border-radius:10px;
+.descripcion {
+    text-overflow: ellipsis;
+    width: 200px; 
+    padding: 2px 5px;
+    white-space: nowrap; 
+    overflow: hidden; 
 }

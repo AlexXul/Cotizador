@@ -13,10 +13,15 @@ namespace Cotizador.Controllers
     {
         private readonly CrearFactura CrearFactura;
         private readonly ObtenerUltimaFactura ObtenerUltimaFactura;
+        private readonly EditarFactura EditarFactura;
+        private readonly ObtenerFacturaPorId ObtenerFacturaPorId;
+
         public FacturaController()
         {
             CrearFactura = new CrearFactura();
             ObtenerUltimaFactura = new ObtenerUltimaFactura();
+            EditarFactura = new EditarFactura();
+            ObtenerFacturaPorId = new ObtenerFacturaPorId();
         }
         public JsonResult Crear()
         {
@@ -33,6 +38,14 @@ namespace Cotizador.Controllers
             }
        
             return Json(new { succes = true,factura=ul });
+        }
+        public JsonResult FinalizarUltimaFactura()
+        {
+            Factura f = ObtenerUltimaFactura.Obtener();
+            f.Finalizado = true;
+            EditarFactura.Editar(f);
+
+            return Json(new { succes = true });
         }
         // GET: FacturaController
         public ActionResult Index()
