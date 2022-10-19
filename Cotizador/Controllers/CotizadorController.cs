@@ -16,25 +16,25 @@ namespace Cotizador.Controllers
     public class CotizadorController : Controller
     {
         private readonly LeerProducto Lector;
-        private readonly CrearCotizacion CrearFactura;
-        private readonly LeerCotizacion LectorFactura;
+        private readonly CrearCotizacion CrearCotizacion;
+        private readonly LeerCotizacion LectorCotizacion;
         private readonly ObtenerExistenciaProductoEnCotizacion ObtenerExistenciaProducto;
-        private readonly EditarCotizacion EditarFactura;
-        private readonly EliminarCotizacion EliminarFactura;
-        private readonly ObtenerCotizacion ObtenerFactura;
-        private readonly ObtenerCotizacionPorIdProducto ObtenerFacturaPorIdProducto;
+        private readonly EditarCotizacion EditarCotizacion;
+        private readonly EliminarCotizacion EliminarCotizacion;
+        private readonly ObtenerCotizacion ObtenerCotizacion;
+        private readonly ObtenerCotizacionPorIdProducto ObtenerCotizacionPorIdProducto;
         private readonly BuscadorProducto BuscadorProducto;
         private readonly ObtenerUltimaFactura ObtenerUltimaFactura;
         public CotizadorController()
         {
             Lector = new LeerProducto();
-            CrearFactura = new CrearCotizacion();
-            LectorFactura = new LeerCotizacion();
+            CrearCotizacion = new CrearCotizacion();
+            LectorCotizacion = new LeerCotizacion();
             ObtenerExistenciaProducto = new ObtenerExistenciaProductoEnCotizacion();
-            EditarFactura = new EditarCotizacion();
-            EliminarFactura = new EliminarCotizacion();
-            ObtenerFactura = new ObtenerCotizacion();
-            ObtenerFacturaPorIdProducto = new ObtenerCotizacionPorIdProducto();
+            EditarCotizacion = new EditarCotizacion();
+            EliminarCotizacion = new EliminarCotizacion();
+            ObtenerCotizacion = new ObtenerCotizacion();
+            ObtenerCotizacionPorIdProducto = new ObtenerCotizacionPorIdProducto();
             BuscadorProducto = new BuscadorProducto();
             ObtenerUltimaFactura = new ObtenerUltimaFactura();
         }
@@ -54,14 +54,14 @@ namespace Cotizador.Controllers
 
             if (existeProductoEnFactura)
             {
-                factura = ObtenerFacturaPorIdProducto.Obtener(id);
+                factura = ObtenerCotizacionPorIdProducto.Obtener(id);
                 factura.Cantidad += cantidad;
-                EditarFactura.Editar(factura);
+                EditarCotizacion.Editar(factura);
             }
             else
             {
                 factura.FacturaId = idFactura;
-                CrearFactura.Crear(factura);
+                CrearCotizacion.Crear(factura);
             }
             return RedirectToAction("Index");
         }
@@ -69,22 +69,25 @@ namespace Cotizador.Controllers
         // GET: Cotizar/Create
         public ActionResult Cotizacion()
         {
-            return View(LectorFactura.Leer());
+            return View(LectorCotizacion.Leer());
         }
 
          
 
         // GET: Cotizar/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id, int cantidad)
         {
-            return View();
+            Cotizacion c = ObtenerCotizacion.Obtener(id);
+            c.Cantidad = cantidad;
+            EditarCotizacion.Editar(c);
+            return RedirectToAction("Cotizacion");
         }
 
        
  
         public ActionResult Delete(int id)
         {
-            EliminarFactura.Eliminar(ObtenerFactura.Obtener(id));
+            EliminarCotizacion.Eliminar(ObtenerCotizacion.Obtener(id));
             return RedirectToAction("Cotizacion");
         }
 
@@ -108,14 +111,14 @@ namespace Cotizador.Controllers
 
             if (existeProductoEnFactura)
             {
-                factura = ObtenerFacturaPorIdProducto.Obtener(id);
+                factura = ObtenerCotizacionPorIdProducto.Obtener(id);
                 factura.Cantidad += cantidad;
-                EditarFactura.Editar(factura);
+                EditarCotizacion.Editar(factura);
             }
             else
             {
                 factura.FacturaId = idFactura;
-                CrearFactura.Crear(factura);
+                CrearCotizacion.Crear(factura);
             }
      
             return Json(new { succes = true });

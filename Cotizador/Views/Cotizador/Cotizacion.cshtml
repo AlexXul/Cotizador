@@ -11,7 +11,7 @@
 <table class="table" id="table_factura">
     <thead>
         <tr>
-            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1></th>
+            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"></p></th>
         </tr>
         <tr>
             @*<th>Id Factura</th>*@
@@ -22,7 +22,7 @@
             <th>Descripcion</th>
             <th>CodigoSat</th>
             <th>Precio</th>
-            <th>Cantidad</th>
+            <th width="110px">Cantidad</th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -40,11 +40,18 @@
                 <td><p class="descripcion" title="@item.Producto.Descripcion">@item.Producto.Descripcion</p></td>
                 <td>@item.Producto.CodigoSat</td>
                 <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
-                <td>@item.Cantidad</td>
-                <td>
+                <td colspan="1">
+                    <div class="row">
+                        <form id="form-edit-cot-@item.Id" action="Edit" method="get" class="col-12">
+                            <input type="number" name="cantidad" value="@item.Cantidad" class="form-control" />
+                            <input value="@item.Id" name="id" type="hidden" />
+                        </form>
+                    </div>
+                </td>
+                <td colspan="2">
                     <div class="row">
                         <div class="col-6">
-                            <a href="@Url.Action("Edit","Cotizador",new {id=item.Id })" class="btn btn-primary form-control">Editar</a>
+                            <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control">Editar</button>
                         </div>
                         <div class="col-6">
                             <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control">Eliminar</a>
@@ -72,6 +79,7 @@
             $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(total.ToString())</td>");
 
             $("#btnExportar").click(() => {
+                $('#fecha').html('@DateTime.Now');
                 var element = document.getElementById('table_factura');
                 var opt = {
                     margin: 1,
