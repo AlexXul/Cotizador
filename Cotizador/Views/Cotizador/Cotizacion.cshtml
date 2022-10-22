@@ -11,7 +11,7 @@
 <table class="table" id="table_factura">
     <thead>
         <tr>
-            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"></p></th>
+            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"><p id="cont-fol" class="text-center"></p></th>
         </tr>
         <tr>
             @*<th>Id Factura</th>*@
@@ -76,22 +76,107 @@
     <script>
         //var tbody = $('#lista_productos tbody');
         $(document).ready(function () {
+
+
+
             $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(total.ToString())</td>");
 
             $("#btnExportar").click(() => {
+                ObtenerFactura();
                 $('#fecha').html('@DateTime.Now');
-                var element = document.getElementById('table_factura');
-                var opt = {
-                    margin: 1,
-                    filename: 'myfile.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
-                };
 
-                // New Promise-based usage:
-                html2pdf().set(opt).from(element).save();
-            })
+                showMensaje("Generando pdf","info");
+                setTimeout(function () {
+                    var element = document.getElementById('table_factura');
+                    var opt = {
+                        margin: 1,
+                        filename: $('#folio').html(),
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+                    };
+
+                    // New Promise-based usage:
+                    html2pdf().set(opt).from(element).save();
+                }, 1000)
+            });
+
+
+
+            function ObtenerFactura() {
+                $.ajax({
+                        data: {},
+                    type: "GET",
+                    url: "@Url.Action("ObtenerInfoUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            //$("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            //$("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
+                            if (!d.factura.finalizado) {
+                                $('#cont-fol').html('Folio: <span id="folio">' + d.factura.folio+'</span>');
+                               // $('.btn-add').attr('disabled', false);
+                                //$("#btnCrearFactura").attr('disabled', true);
+                                //$("#btnFinalizarFactura").attr('disabled', false);
+                                //7$('.btn-add').attr('disabled', false);
+                                //$('.ver-cotizacion').attr('hidden', false);
+                            } else {
+                                //$("#btnCrearFactura").attr('disabled', false);
+                                //$("#btnFinalizarFactura").attr('disabled', true);
+
+                                //$('.btn-add').attr('disabled', true);
+                                //$('.ver-cotizacion').attr('hidden', true);
+                            }
+
+                        } else {
+
+                            //$("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+
+            function showMensaje(mensaje, tipo) {
+                switch (tipo) {
+                    case 'success':
+                        iziToast.success({
+                            title: 'OK',
+                            position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                            message: mensaje,
+                        });
+                        break;
+                    case 'info':
+                        iziToast.info({
+                            title: 'Info',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'warning':
+                        iziToast.warning({
+                            title: 'Caution',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'error':
+                        iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    default:
+                        console.log('Opción incorrecta');
+                }
+            }
         });
     </script>
 }

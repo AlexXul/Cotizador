@@ -69,6 +69,10 @@ namespace Cotizador.Controllers
         // GET: Cotizar/Create
         public ActionResult Cotizacion()
         {
+            if (ObtenerUltimaFactura.Obtener().Finalizado)
+            {
+                return View(new List<Cotizacion> { });
+            }
             return View(LectorCotizacion.Leer());
         }
 
