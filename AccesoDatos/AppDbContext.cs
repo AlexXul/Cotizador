@@ -18,7 +18,7 @@ namespace AccesoDatos
             if (!options.IsConfigured)
             {
                 string connectionString = "Data Source=LAPTOP-TU4DNU1R;Initial Catalog=DbCotizador;Integrated Security=true";
-                connectionString = "Data Source=LAPTOP-MO1HC59V;Initial Catalog=DbCotizador;Integrated Security=true";
+               // connectionString = "Data Source=LAPTOP-MO1HC59V;Initial Catalog=DbCotizador;Integrated Security=true";
                 options.UseSqlServer(connectionString);
             }
         }
