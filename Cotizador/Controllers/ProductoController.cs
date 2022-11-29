@@ -72,7 +72,11 @@ namespace Cotizador.Controllers
             return RedirectToAction("Index");
         }
 
-      
-        
+        public JsonResult BuscarProducto(int buscado)
+        {
+            Producto pBuscado = Recuperador.Obtener(buscado);
+            return Json(new { succes = pBuscado != null, data = pBuscado });
+        }
+
     }
 }

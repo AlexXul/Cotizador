@@ -20,7 +20,7 @@ namespace AccesoDatos
             {
                 string connectionString = "Data Source=LAPTOP-TU4DNU1R;Initial Catalog=DbCotizador;Integrated Security=true";
                 connectionString = "Data Source=LAPTOP-MO1HC59V;Initial Catalog=DbCotizador;Integrated Security=true";
-                connectionString = "workstation id=DbTester.mssql.somee.com;packet size=4096;user id=daniel_123_SQLLogin_1;pwd=lx8u4atmdy;data source=DbTester.mssql.somee.com;persist security info=False;initial catalog=DbTester";
+                //connectionString = "workstation id=DbTester.mssql.somee.com;packet size=4096;user id=daniel_123_SQLLogin_1;pwd=lx8u4atmdy;data source=DbTester.mssql.somee.com;persist security info=False;initial catalog=DbTester";
                 options.UseSqlServer(connectionString);
             }
         }

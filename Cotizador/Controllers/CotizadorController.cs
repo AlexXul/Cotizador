@@ -49,7 +49,7 @@ namespace Cotizador.Controllers
         {
             int idFactura = ObtenerUltimaFactura.Obtener().Id;
 
-            bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
+            bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id,idFactura);
             Cotizacion factura = new Cotizacion { Cantidad = cantidad, ProductoId = id };
 
             if (existeProductoEnFactura)
@@ -69,11 +69,12 @@ namespace Cotizador.Controllers
         // GET: Cotizar/Create
         public ActionResult Cotizacion()
         {
-            if (ObtenerUltimaFactura.Obtener().Finalizado)
+            Factura ultimaFacura = ObtenerUltimaFactura.Obtener();
+            if (ultimaFacura.Finalizado)
             {
                 return View(new List<Cotizacion> { });
             }
-            return View(LectorCotizacion.Leer());
+            return View(LectorCotizacion.Leer(ultimaFacura.Id));
         }
 
          
@@ -110,7 +111,7 @@ namespace Cotizador.Controllers
                 return Json(new { succes = false,mensaje="Verifique los datos." });
             }
            
-            bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
+            bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id,idFactura);
             Cotizacion factura = new Cotizacion { Cantidad = cantidad, ProductoId = id };
 
             if (existeProductoEnFactura)

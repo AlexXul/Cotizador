@@ -10,12 +10,12 @@ namespace Negocios.CrudCotizacion
 {
     public class LeerCotizacion
     {
-        public IEnumerable<Cotizacion> Leer()
+        public IEnumerable<Cotizacion> Leer(int id)
         {
             using (var dbContext = new AppDbContext())
             {
                 var consulta = from f in dbContext.Cotizaciones
-                               join p in dbContext.Productos on f.ProductoId equals p.Id
+                               join p in dbContext.Productos on f.ProductoId equals p.Id where f.FacturaId == id
                                select new Cotizacion
                                {
                                    Id = f.Id,
