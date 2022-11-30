@@ -25,6 +25,7 @@ namespace Cotizador.Controllers
         private readonly ObtenerCotizacionPorIdProducto ObtenerCotizacionPorIdProducto;
         private readonly BuscadorProducto BuscadorProducto;
         private readonly ObtenerUltimaFactura ObtenerUltimaFactura;
+        private readonly ObtenerPrecioProductoPorId ObtenerPrecioProductoPorId;
         public CotizadorController()
         {
             Lector = new LeerProducto();
@@ -37,6 +38,7 @@ namespace Cotizador.Controllers
             ObtenerCotizacionPorIdProducto = new ObtenerCotizacionPorIdProducto();
             BuscadorProducto = new BuscadorProducto();
             ObtenerUltimaFactura = new ObtenerUltimaFactura();
+            ObtenerPrecioProductoPorId = new ObtenerPrecioProductoPorId();
         }
         // GET: Cotizar
         public ActionResult Index()
@@ -45,7 +47,7 @@ namespace Cotizador.Controllers
         }
 
         // GET: Cotizar/Details/5
-        public ActionResult Agregar(int cantidad, int id)
+        /*public ActionResult Agregar(int cantidad, int id)
         {
             int idFactura = ObtenerUltimaFactura.Obtener().Id;
 
@@ -64,7 +66,7 @@ namespace Cotizador.Controllers
                 CrearCotizacion.Crear(factura);
             }
             return RedirectToAction("Index");
-        }
+        }*/
 
         // GET: Cotizar/Create
         public ActionResult Cotizacion()
@@ -77,13 +79,15 @@ namespace Cotizador.Controllers
             return View(LectorCotizacion.Leer(ultimaFacura.Id));
         }
 
-         
+
 
         // GET: Cotizar/Edit/5
         public ActionResult Edit(int id, int cantidad)
         {
             Cotizacion c = ObtenerCotizacion.Obtener(id);
+            float precio = ObtenerPrecioProductoPorId.Obtener(c.ProductoId);
             c.Cantidad = cantidad;
+            c.SubTotal = cantidad * precio;
             EditarCotizacion.Editar(c);
             return RedirectToAction("Cotizacion");
         }
@@ -118,11 +122,13 @@ namespace Cotizador.Controllers
             {
                 factura = ObtenerCotizacionPorIdProducto.Obtener(id,idFactura);
                 factura.Cantidad += cantidad;
+                factura.SubTotal = factura.Cantidad * ObtenerPrecioProductoPorId.Obtener(id);
                 EditarCotizacion.Editar(factura);
             }
             else
             {
                 factura.FacturaId = idFactura;
+                factura.SubTotal = factura.Cantidad * ObtenerPrecioProductoPorId.Obtener(id);
                 CrearCotizacion.Crear(factura);
             }
      

@@ -16,7 +16,7 @@ namespace Entidades
         public Producto Producto { get; set; }
 
         public int Cantidad { get; set; }
-        public int SubTotal { get; set; }
+        public float SubTotal { get; set; }
         
         public int FacturaId { get; set; }
         public Factura Factura { get; set; }
