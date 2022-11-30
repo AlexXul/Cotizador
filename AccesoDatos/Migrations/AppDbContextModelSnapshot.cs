@@ -35,8 +35,8 @@ namespace AccesoDatos.Migrations
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubTotal")
-                        .HasColumnType("int");
+                    b.Property<float>("SubTotal")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

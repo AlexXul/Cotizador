@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
+<h1>Cotizador</h1>
 <div class="card mb-4">
     <div class="card-header">
         Factura
@@ -12,19 +13,25 @@
         <p class="card-text" id="fact-state"></p>
     </div>
     <div class="card-footer text-muted">
-        <button id="btnCrearFactura" class="btn btn-info mb-3">Crear factura</button>
+        <button id="btnCrearFactura" class="btn btn-info mb-3 text-white">Crear factura</button>
         <button id="btnFinalizarFactura" class="btn btn-danger mb-3">Finalizar factura</button>
-        <a class="ver-cotizacion btn btn-info  mb-3" href="/Cotizador/Cotizacion">Ver cotización</a>
+        <a class="ver-cotizacion btn btn-info text-white  mb-3" href="/Cotizador/Cotizacion">Ver cotización</a>
     </div>
 </div>
 
 <section class="row mb-4">
     <form id="formSearch" class="col-8">
         <div class="row">
-            <div class="col-3"> <input id="producto" placeholder="Producto" class="form-control" /></div>
-            <div class="col-3"><button form="formSearch" id="btnBuscar" class="btn btn-primary form-control">Buscar</button></div>
-            <div class="col-3"><input disabled id="productoId" placeholder="Id" class="form-control" /></div>
-            <div class="col-3"><input id="cantidad" type="number" placeholder="Cantidad" class="form-control" /></div>
+            <div class="col-4">
+                <div class="input-group">
+                    <input class="form-control" type="text" id="producto" placeholder="Nombre producto" />
+                    <button class="btn btn-primary" form="formSearch" id="btnBuscar"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+           
+            
+            <div class="col-4"><input disabled id="productoId" placeholder="Id" class="form-control" /></div>
+            <div class="col-4"><input id="cantidad" type="number" placeholder="Cantidad" class="form-control" /></div>
         </div>
     </form>
     <div class="col-4">
@@ -54,7 +61,7 @@
                 <td>@item.Nombre</td>
                 <td>@item.CodFab</td>
                 <td>@item.CodProv</td>
-                <td><p class="descripcion" title="@item.Descripcion">@item.Descripcion</p></td>
+                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;" title="@item.Descripcion">@item.Descripcion</p></td>
                 <td>@item.CodigoSat</td>
                 <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Precio.ToString())</td>
                 <td>

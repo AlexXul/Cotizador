@@ -6,12 +6,13 @@
 }
 
 <section class="mb-3" style="display:@(Model.Any()?"":"none")">
-    <button class="btn btn-success" id="btnExportar">Exportar a PDF</button>
+    <button class="btn btn-success mt-2" id="btnExportar">Exportar a PDF</button>
 </section>
 <table class="table" id="table_factura">
     <thead>
         <tr>
-            <th align="center" colspan="9"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"><p id="cont-fol" class="text-center"></p></th>
+            <td colspan="3" align="center"><img width="300px" src="~/imgs/logo.png" /></td>
+            <th align="center" colspan="6"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"><p id="cont-fol" class="text-center"></p></th>
         </tr>
         <tr>
             @*<th>Id Factura</th>*@
@@ -23,7 +24,7 @@
             <th>CodigoSat</th>
             <th>Precio</th>
             <th width="110px">Cantidad</th>
-            <th>Acciones</th>
+            <th class="hidd-when-reporting">Acciones</th>
         </tr>
     </thead>
 
@@ -51,10 +52,10 @@
                 <td colspan="2">
                     <div class="row">
                         <div class="col-6">
-                            <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control">Editar</button>
+                            <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control hidd-when-reporting">Editar</button>
                         </div>
                         <div class="col-6">
-                            <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control">Eliminar</a>
+                            <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control hidd-when-reporting">Eliminar</a>
                         </div>
                     </div>
                      
@@ -84,7 +85,7 @@
             $("#btnExportar").click(() => {
                 ObtenerFactura();
                 $('#fecha').html('@DateTime.Now');
-
+                $('.hidd-when-reporting').hide();
                 showMensaje("Generando pdf","info");
                 setTimeout(function () {
                     var element = document.getElementById('table_factura');
@@ -99,6 +100,9 @@
                     // New Promise-based usage:
                     html2pdf().set(opt).from(element).save();
                 }, 1000)
+                setTimeout(()=>{
+                    location.reload();
+                },5000)
             });
 
 
