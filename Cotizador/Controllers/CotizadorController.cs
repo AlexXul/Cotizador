@@ -54,7 +54,7 @@ namespace Cotizador.Controllers
 
             if (existeProductoEnFactura)
             {
-                factura = ObtenerCotizacionPorIdProducto.Obtener(id);
+                factura = ObtenerCotizacionPorIdProducto.Obtener(id,idFactura);
                 factura.Cantidad += cantidad;
                 EditarCotizacion.Editar(factura);
             }
@@ -116,7 +116,7 @@ namespace Cotizador.Controllers
 
             if (existeProductoEnFactura)
             {
-                factura = ObtenerCotizacionPorIdProducto.Obtener(id);
+                factura = ObtenerCotizacionPorIdProducto.Obtener(id,idFactura);
                 factura.Cantidad += cantidad;
                 EditarCotizacion.Editar(factura);
             }

@@ -10,11 +10,11 @@ namespace Negocios.CrudCotizacion
 {
     public class ObtenerCotizacionPorIdProducto
     {
-        public Cotizacion Obtener(int id)
+        public Cotizacion Obtener(int id,int idFactura)
         {
             using (var dbContext = new AppDbContext())
             {
-                var consulta = from f in dbContext.Cotizaciones where f.ProductoId == id select f;
+                var consulta = from f in dbContext.Cotizaciones where f.ProductoId == id && f.FacturaId == idFactura select f;
                 return consulta.FirstOrDefault();
             }
         }
