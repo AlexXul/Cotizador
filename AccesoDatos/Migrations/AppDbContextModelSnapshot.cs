@@ -47,6 +47,21 @@ namespace AccesoDatos.Migrations
                     b.ToTable("Cotizaciones");
                 });
 
+            modelBuilder.Entity("Entidades.Descuento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Valor")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Descuentos");
+                });
+
             modelBuilder.Entity("Entidades.Factura", b =>
                 {
                     b.Property<int>("Id")
@@ -60,12 +75,24 @@ namespace AccesoDatos.Migrations
                     b.Property<bool>("Finalizado")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Folio")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Facturas");
+                });
+
+            modelBuilder.Entity("Entidades.IVA", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<float>("Valor")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IVas");
                 });
 
             modelBuilder.Entity("Entidades.Producto", b =>

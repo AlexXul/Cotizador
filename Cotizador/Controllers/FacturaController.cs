@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Negocios.Utilerias;
 
 namespace Cotizador.Controllers
 {
@@ -25,7 +26,7 @@ namespace Cotizador.Controllers
         }
         public JsonResult Crear()
         {
-            Factura f = new Factura { Fecha = DateTime.Now,Folio = Guid.NewGuid().ToString()};
+            Factura f = new Factura { Fecha = DateTime.Now};
             CrearFactura.Crear(f);
             return Json(new { succes = true });
         }
@@ -36,6 +37,7 @@ namespace Cotizador.Controllers
             {
                 return Json(new { succes = false });
             }
+            ul.Folio = GeneradorFolio.Generar(ul.Id);
        
             return Json(new { succes = true,factura=ul });
         }

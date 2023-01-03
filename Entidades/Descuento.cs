@@ -7,17 +7,10 @@ using System.Threading.Tasks;
 
 namespace Entidades
 {
-    public class Factura
+    public class Descuento
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
-        public DateTime Fecha { get; set; }
-
-        public bool Finalizado { get; set; } = false;
-
-        [NotMapped]
-
-        public String Folio { get; set; }
+        public float Valor { get; set; }
     }
 }

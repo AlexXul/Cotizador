@@ -16,6 +16,9 @@ namespace CotizadorDatacom.Controllers
         private readonly CrearRangoProducto RegistradorRango;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly LectorArchivo LectorExcel;
+        private readonly ObtenerProductoPorDatos ObtenerProductoPorDatos;
+        private readonly CrearProducto CrearProducto;
+        private readonly EditarProducto EditarProducto;
 
 
         public AdminController(IWebHostEnvironment hostEnvironment)
@@ -24,6 +27,9 @@ namespace CotizadorDatacom.Controllers
             RegistradorRango = new CrearRangoProducto();
             _hostEnvironment = hostEnvironment;
             LectorExcel = new LectorArchivo();
+            ObtenerProductoPorDatos = new ObtenerProductoPorDatos();
+            CrearProducto = new CrearProducto();
+            EditarProducto = new EditarProducto();
 
         }
         // GET: AdminController
@@ -79,9 +85,27 @@ namespace CotizadorDatacom.Controllers
             }
             
             IEnumerable<Producto> DatosLeidos = LectorExcel.Leer(wwwRootPath + "/" + Path);
-            RegistradorRango.Crear(DatosLeidos);
+            int contadorEditados = 0;
+            int contadorCreados = 0;
 
-            ViewBag.MensajeExito = $"Se agregaron {DatosLeidos.Count()} productos ala BD del archivo: {Path}";
+            foreach (Producto p in DatosLeidos)
+            {
+                Producto prod  = ObtenerProductoPorDatos.Obtener(p);
+                if (prod == null)
+                {
+                    CrearProducto.Crear(p);
+                    contadorCreados++;
+
+                }
+                else
+                {
+                    EditarProducto.Editar(prod);
+                    contadorEditados++;
+                }
+
+
+            }
+            ViewBag.MensajeExito = $"Se agregaron {contadorCreados} y se actualizaron {contadorEditados}  productos ala BD del archivo: {Path}";
             return View();
         }
 

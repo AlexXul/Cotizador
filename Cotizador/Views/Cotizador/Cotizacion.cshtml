@@ -2,6 +2,10 @@
 @model IEnumerable<Cotizacion>
 @{
     ViewData["Title"] = "Factura";
+   
+    float subTotal = 0;
+    float totalDescuento = 0;
+    float totalIva = 0;
     float total = 0;
 }
 
@@ -18,8 +22,8 @@
             @*<th>Id Factura</th>*@
             <th>Id Producto</th>
             <th>Nombre</th>
-            <th>CodFab</th>
-            <th>CodProv</th>
+            @*<th>CodFab</th>
+              <th>CodProv</th>**@
             <th>Descripcion</th>
             <th>CodigoSat</th>
             <th>Precio</th>
@@ -31,39 +35,39 @@
     <tbody>
         @foreach (var item in Model)
         {
-            total += (item.Cantidad * item.Producto.Precio);
-            <tr>
-                @*<td>@item.Id</td>*@
-                <td>@item.ProductoId</td>
-                <td>@item.Producto.Nombre</td>
-                <td>@item.Producto.CodFab</td>
-                <td>@item.Producto.CodProv</td>
-                <td><p class="descripcion" title="@item.Producto.Descripcion">@item.Producto.Descripcion</p></td>
-                <td>@item.Producto.CodigoSat</td>
-                <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
-                <td colspan="1">
-                    <div class="row">
-                        <form id="form-edit-cot-@item.Id" action="Edit" method="get" class="col-12">
-                            <input type="number" name="cantidad" value="@item.Cantidad" class="form-control" />
-                            <input value="@item.Id" name="id" type="hidden" />
-                        </form>
+            subTotal += (item.Cantidad * item.Producto.Precio);
+        <tr>
+            @*<td>@item.Id</td>*@
+            <td>@item.ProductoId</td>
+            <td>@item.Producto.Nombre</td>
+            @* <td>@item.Producto.CodFab</td>
+        <td>@item.Producto.CodProv</td>*@
+            <td><p class="descripcion" title="@item.Producto.Descripcion">@item.Producto.Descripcion</p></td>
+            <td>@item.Producto.CodigoSat</td>
+            <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
+            <td colspan="1">
+                <div class="row">
+                    <form id="form-edit-cot-@item.Id" action="Edit" method="get" class="col-12">
+                        <input type="number" name="cantidad" value="@item.Cantidad" class="form-control" />
+                        <input value="@item.Id" name="id" type="hidden" />
+                    </form>
+                </div>
+            </td>
+            <td colspan="2">
+                <div class="row">
+                    <div class="col-6">
+                        <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control hidd-when-reporting">Editar</button>
                     </div>
-                </td>
-                <td colspan="2">
-                    <div class="row">
-                        <div class="col-6">
-                            <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control hidd-when-reporting">Editar</button>
-                        </div>
-                        <div class="col-6">
-                            <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control hidd-when-reporting">Eliminar</a>
-                        </div>
+                    <div class="col-6">
+                        <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control hidd-when-reporting">Eliminar</a>
                     </div>
-                     
-                    
-                </td>
-            </tr>
+                </div>
+
+
+            </td>
+        </tr>
             <tr>
-                <th>Subtotal</th>
+                <th>total por producto</th>
                 <td colspan="10">$@Negocios.Utilerias.FormatearDecimal.Formatear((item.Cantidad * item.Producto.Precio).ToString())</td>
             </tr>
         }
@@ -78,9 +82,18 @@
         //var tbody = $('#lista_productos tbody');
         $(document).ready(function () {
 
+            @{ 
+                totalDescuento = Negocios.Utilerias.AplicarDescuento.Aplicar(subTotal);
+                totalIva = Negocios.Utilerias.AplicarIVA.Aplicar(totalDescuento);
+                total = totalDescuento + totalIva;
 
 
-            $('#table_factura tfoot').html("<th>Total</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(total.ToString())</td>");
+            }
+
+            let cadenaTotales = "<tr><th>SubTotal</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(subTotal.ToString())</td></tr>"
+            cadenaTotales += "<tr><th>Total Con Descuento</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(totalDescuento.ToString())</td></tr>"
+            cadenaTotales += "<tr><th>Total con IVA</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(totalIva.ToString())</td></tr>"
+            $('#table_factura tfoot').html(cadenaTotales);
 
             $("#btnExportar").click(() => {
                 ObtenerFactura();
