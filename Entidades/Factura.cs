@@ -20,5 +20,9 @@ namespace Entidades
         [NotMapped]
 
         public String Folio { get; set; }
+
+        [NotMapped]
+
+        public IEnumerable<Producto> Productos { get; set; }
     }
 }

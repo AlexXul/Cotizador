@@ -1,0 +1,65 @@
+﻿
+@model IEnumerable<Factura>
+@{
+    ViewData["Title"] = "Facturas";
+}
+<h1>Facturas</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Fecha Creacion</th>
+            <th>Fecha Impresion</th>
+            <th>Finalizada</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.FechaCreacion</td>
+            <td>@item.FechaImpresion</td>
+            <td>
+                @if (item.Finalizado)
+                {
+                    <span class="badge btn-success">Finalizado</span>
+                }
+                else
+                {
+                    <span class="badge btn-danger">Pendiente</span>
+
+                }
+            </td>
+            <td>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="@Url.Action("VerProductos","Factura",new {id=item.Id })" class="btn btn-primary form-control">Ver Productos</a>
+                    </div>
+                    @* <div class="col-6">
+            <a href="@Url.Action("Edit","Factura",new {id=item.Id })" class="btn btn-primary form-control">Editar</a>
+        </div>*@
+                    <div class="col-6">
+                        <a onclick="return confirm('¿Desea Eliminar este Factura?')" href="@Url.Action("Delete","Factura",new {id=item.Id })" class="btn btn-danger form-control">Eliminar</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>  
+@section scripts{
+    <script>
+        $(document).ready(function () {
+             
+        });
+    </script>
+ }
+
+   
+ 

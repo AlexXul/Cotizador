@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccesoDatos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230104050628_001")]
+    [Migration("20230104193949_001")]
     partial class _001
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

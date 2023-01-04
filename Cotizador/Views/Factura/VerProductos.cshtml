@@ -1,0 +1,266 @@
+﻿
+@model IEnumerable<Cotizacion>
+@{
+    ViewData["Title"] = "Productos en Factura";
+   
+    float subTotal = 0;
+    float totalDescuento = 0;
+    float totalIva = 0;
+    float total = 0;
+}
+
+<section class="mb-3" style="display:@(Model.Any()?"":"none")">
+    <button class="btn btn-success mt-2" id="btnExportar">Exportar a PDF</button>
+</section>
+<table class="table" id="table_factura">
+    <thead>
+        <tr>
+            <td colspan="3" align="center"><img width="300px" src="~/imgs/logo.png" /></td>
+            <th align="center" colspan="6"><h1 class="text-center">Cotización</h1><p class="text-center" id="fecha"><p id="cont-fol" class="text-center"></p></th>
+        </tr>
+        <tr>
+            @*<th>Id Factura</th>*@
+            <th>Id Producto</th>
+            <th>Nombre</th>
+            @*<th>CodFab</th>
+        <th>CodProv</th>**@
+            <th>Descripcion</th>
+            <th>CodigoSat</th>
+            <th>Precio</th>
+            <th width="110px">Cantidad</th>
+            @*<th class="hidd-when-reporting">Acciones</th>*@
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            subTotal += (item.Cantidad * item.Producto.Precio);
+        <tr>
+            @*<td>@item.Id</td>*@
+            <td>@item.ProductoId</td>
+            <td>@item.Producto.Nombre</td>
+            @* <td>@item.Producto.CodFab</td>
+        <td>@item.Producto.CodProv</td>*@
+            <td><p class="descripcion" title="@item.Producto.Descripcion">@item.Producto.Descripcion</p></td>
+            <td>@item.Producto.CodigoSat</td>
+            <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Producto.Precio.ToString())</td>
+            <td colspan="1">
+                <div class="row">
+                    <form id="form-edit-cot-@item.Id" action="Edit" method="get" class="col-12">
+                        <input readonly type="number" name="cantidad" value="@item.Cantidad" class="form-control" />
+                        <input value="@item.Id" name="id" type="hidden" />
+                    </form>
+                </div>
+            </td>
+            @* <td colspan="2">
+        <div class="row">
+            <div class="col-6">
+                <button form="form-edit-cot-@item.Id" class="btn btn-primary form-control hidd-when-reporting">Editar</button>
+            </div>
+            <div class="col-6">
+                <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Cotizador",new {id=item.Id })" class="btn btn-danger form-control hidd-when-reporting">Eliminar</a>
+            </div>
+        </div>
+
+            </td>*@
+
+        </tr>
+            <tr>
+                <th>total por producto</th>
+                <td colspan="10">$@Negocios.Utilerias.FormatearDecimal.Formatear((item.Cantidad * item.Producto.Precio).ToString())</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+
+    </tfoot>
+</table>
+
+@section scripts{
+    <script>
+        //var tbody = $('#lista_productos tbody');
+        $(document).ready(function () {
+
+            @{ 
+                totalDescuento = Negocios.Utilerias.AplicarDescuento.Aplicar(subTotal);
+                totalIva = Negocios.Utilerias.AplicarIVA.Aplicar(totalDescuento);
+                total = totalDescuento + totalIva;
+
+
+            }
+
+            let cadenaTotales = "<tr><th>SubTotal</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(subTotal.ToString())</td></tr>"
+            cadenaTotales += "<tr><th>Total Con Descuento</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(totalDescuento.ToString())</td></tr>"
+            cadenaTotales += "<tr><th>Total con IVA</th><td colspan='10'>$@Negocios.Utilerias.FormatearDecimal.Formatear(totalIva.ToString())</td></tr>"
+            $('#table_factura tfoot').html(cadenaTotales);
+
+            $("#btnExportar").click(() => {
+                AsignarFechaImpresionUltimaFactura()
+                setTimeout(function(){
+                    ObtenerFactura();
+                }, 500)
+                
+                $('.hidd-when-reporting').hide();
+                showMensaje("Generando pdf","info");
+                setTimeout(function () {
+                    var element = document.getElementById('table_factura');
+                    var opt = {
+                        margin: 1,
+                        filename: $('#folio').html(),
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: { scale: 2 },
+                        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+                    };
+
+                    // New Promise-based usage:
+                    html2pdf().set(opt).from(element).save();
+                }, 1000)
+                setTimeout(()=>{
+                    location.reload();
+                },5000)
+            });
+
+
+
+            function ObtenerFactura() {
+                $.ajax({
+                        data: {},
+                    type: "GET",
+                    url: "@Url.Action("ObtenerInfoUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            //$("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            //$("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
+                            if (!d.factura.finalizado) {
+                                $('#cont-fol').html('Folio: <span id="folio">' + d.factura.folio+'</span>');
+                                $('#fecha').html(formatearFecha(d.factura.fechaImpresion));
+                               // $('.btn-add').attr('disabled', false);
+                                //$("#btnCrearFactura").attr('disabled', true);
+                                //$("#btnFinalizarFactura").attr('disabled', false);
+                                //7$('.btn-add').attr('disabled', false);
+                                //$('.ver-cotizacion').attr('hidden', false);
+                            } else {
+                                //$("#btnCrearFactura").attr('disabled', false);
+                                //$("#btnFinalizarFactura").attr('disabled', true);
+
+                                //$('.btn-add').attr('disabled', true);
+                                //$('.ver-cotizacion').attr('hidden', true);
+                            }
+
+                        } else {
+
+                            //$("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+            function AsignarFechaImpresionUltimaFactura() {
+                $.ajax({
+                    data: {},
+                    type: "GET",
+                    url: "@Url.Action("AsignarFechaImpresionUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            //$("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            //$("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
+                            if (!d.factura.finalizado) {
+                                //$('#cont-fol').html('Folio: <span id="folio">' + d.factura.folio + '</span>');
+                                // $('.btn-add').attr('disabled', false);
+                                //$("#btnCrearFactura").attr('disabled', true);
+                                //$("#btnFinalizarFactura").attr('disabled', false);
+                                //7$('.btn-add').attr('disabled', false);
+                                //$('.ver-cotizacion').attr('hidden', false);
+                            } else {
+                                //$("#btnCrearFactura").attr('disabled', false);
+                                //$("#btnFinalizarFactura").attr('disabled', true);
+
+                                //$('.btn-add').attr('disabled', true);
+                                //$('.ver-cotizacion').attr('hidden', true);
+                            }
+
+                        } else {
+
+                            //$("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+            function formatearFecha(fecha){
+                let date = new Date(fecha)
+
+                let day = date.getDate()
+                let month = date.getMonth() + 1
+                let year = date.getFullYear()
+
+                let hours = date.getHours()
+                let minutes = date.getMinutes()
+                let seconds = date.getSeconds()
+                if (month < 10) {
+                    month = "0"+month
+                }
+                if(day<10){
+                    day = "0"+day
+                }
+                if(hours>12){
+                    hours = hours-12
+                    seconds = seconds+" p. m"
+                }else{
+                    seconds = seconds + " a. m"
+                }
+                return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+            }
+            function showMensaje(mensaje, tipo) {
+                switch (tipo) {
+                    case 'success':
+                        iziToast.success({
+                            title: 'OK',
+                            position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                            message: mensaje,
+                        });
+                        break;
+                    case 'info':
+                        iziToast.info({
+                            title: 'Info',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'warning':
+                        iziToast.warning({
+                            title: 'Caution',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'error':
+                        iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    default:
+                        console.log('Opción incorrecta');
+                }
+            }
+        });
+    </script>
+}
+

@@ -16,6 +16,9 @@ namespace Cotizador.Controllers
         private readonly ObtenerUltimaFactura ObtenerUltimaFactura;
         private readonly EditarFactura EditarFactura;
         private readonly ObtenerFacturaPorId ObtenerFacturaPorId;
+        private readonly ObtenerFacturas ObtenerFacturas;
+        private readonly EliminarFactura EliminarFactura;
+        private readonly ObtenerProductosIdFactura ObtenerProductosIdFactura;
 
         public FacturaController()
         {
@@ -23,6 +26,9 @@ namespace Cotizador.Controllers
             ObtenerUltimaFactura = new ObtenerUltimaFactura();
             EditarFactura = new EditarFactura();
             ObtenerFacturaPorId = new ObtenerFacturaPorId();
+            ObtenerFacturas = new ObtenerFacturas();
+            EliminarFactura = new EliminarFactura();
+            ObtenerProductosIdFactura = new ObtenerProductosIdFactura();
         }
         public JsonResult Crear()
         {
@@ -63,7 +69,8 @@ namespace Cotizador.Controllers
         // GET: FacturaController
         public ActionResult Index()
         {
-            return View();
+            IEnumerable<Factura> Facturas = ObtenerFacturas.Obtener();
+            return View(Facturas);
         }
 
         // GET: FacturaController/Details/5
@@ -98,6 +105,12 @@ namespace Cotizador.Controllers
         {
             return View();
         }
+        public ActionResult VerProductos(int id)
+        {
+            IEnumerable<Cotizacion> Cotizaciones = ObtenerProductosIdFactura.Obtener(id);
+
+            return View( Cotizaciones);
+        }
 
         // POST: FacturaController/Edit/5
         [HttpPost]
@@ -117,7 +130,9 @@ namespace Cotizador.Controllers
         // GET: FacturaController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Factura factura = ObtenerFacturaPorId.Obtener(id);
+            EliminarFactura.Eliminar(factura);
+            return RedirectToAction("Index");
         }
 
         // POST: FacturaController/Delete/5
