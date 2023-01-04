@@ -26,7 +26,8 @@ namespace Cotizador.Controllers
         }
         public JsonResult Crear()
         {
-            Factura f = new Factura { Fecha = DateTime.Now};
+            DateTime FechaCreacion = ConvertidorFecha.ConvertToMexicanDate(DateTime.Now);
+            Factura f = new Factura { FechaCreacion = FechaCreacion};
             CrearFactura.Crear(f);
             return Json(new { succes = true });
         }
@@ -45,6 +46,16 @@ namespace Cotizador.Controllers
         {
             Factura f = ObtenerUltimaFactura.Obtener();
             f.Finalizado = true;
+            EditarFactura.Editar(f);
+
+            return Json(new { succes = true });
+        }
+        public JsonResult AsignarFechaImpresionUltimaFactura()
+        {
+            Factura f = ObtenerUltimaFactura.Obtener();
+            DateTime FechaImpresion = DateTime.Now;
+            
+            f.FechaImpresion = ConvertidorFecha.ConvertToMexicanDate(FechaImpresion);
             EditarFactura.Editar(f);
 
             return Json(new { succes = true });

@@ -12,7 +12,8 @@ namespace Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public DateTime Fecha { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime FechaImpresion { get; set; }
 
         public bool Finalizado { get; set; } = false;
 

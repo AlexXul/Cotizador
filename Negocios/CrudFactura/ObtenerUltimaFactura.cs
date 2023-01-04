@@ -14,7 +14,7 @@ namespace Negocios.CrudFactura
         {
             using (var dbContext = new AppDbContext())
             {
-                var query = from f in dbContext.Facturas orderby f.Fecha descending select f;
+                var query = from f in dbContext.Facturas orderby f.FechaCreacion descending select f;
                 return query.FirstOrDefault();
                 
             }
