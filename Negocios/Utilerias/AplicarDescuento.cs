@@ -13,9 +13,18 @@ namespace Negocios.Utilerias
         {
             using (var dbContext = new AppDbContext())
             {
-                var ValorDescuento = (from d in dbContext.Descuentos select d.Valor).First();
+                var ValorDescuento = ObtenerDescuento();
 
                 return costo - ((ValorDescuento / 100) * costo);
+            }
+        }
+        public static float ObtenerDescuento()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var ValorDescuento = (from d in dbContext.Descuentos select d.Valor).First();
+
+                return ValorDescuento;
             }
         }
     }
