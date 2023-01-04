@@ -13,9 +13,18 @@ namespace Negocios.Utilerias
         {
             using (var dbContext = new AppDbContext())
             {
-                var ValorDescuento = (from d in dbContext.IVas select d.Valor).First();
+                float ValorIVA = ObtenerIVA();
 
-                return costo + ((ValorDescuento / 100) * costo);
+                return costo + ((ValorIVA / 100) * costo);
+            }
+        }
+        public static float ObtenerIVA()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                float ValorIVA = (from d in dbContext.IVAs select d.Valor).First();
+
+                return ValorIVA;
             }
         }
     }
