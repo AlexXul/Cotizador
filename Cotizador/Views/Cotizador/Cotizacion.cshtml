@@ -96,8 +96,11 @@
             $('#table_factura tfoot').html(cadenaTotales);
 
             $("#btnExportar").click(() => {
-                ObtenerFactura();
-                $('#fecha').html('@DateTime.Now');
+                AsignarFechaImpresionUltimaFactura()
+                setTimeout(function(){
+                    ObtenerFactura();
+                }, 500)
+                
                 $('.hidd-when-reporting').hide();
                 showMensaje("Generando pdf","info");
                 setTimeout(function () {
@@ -136,6 +139,7 @@
                             //$("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
                             if (!d.factura.finalizado) {
                                 $('#cont-fol').html('Folio: <span id="folio">' + d.factura.folio+'</span>');
+                                $('#fecha').html(formatearFecha(d.factura.fechaImpresion));
                                // $('.btn-add').attr('disabled', false);
                                 //$("#btnCrearFactura").attr('disabled', true);
                                 //$("#btnFinalizarFactura").attr('disabled', false);
@@ -159,7 +163,69 @@
                     }
                 });
             }
+            function AsignarFechaImpresionUltimaFactura() {
+                $.ajax({
+                    data: {},
+                    type: "GET",
+                    url: "@Url.Action("AsignarFechaImpresionUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
 
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            //$("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            //$("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
+                            if (!d.factura.finalizado) {
+                                //$('#cont-fol').html('Folio: <span id="folio">' + d.factura.folio + '</span>');
+                                // $('.btn-add').attr('disabled', false);
+                                //$("#btnCrearFactura").attr('disabled', true);
+                                //$("#btnFinalizarFactura").attr('disabled', false);
+                                //7$('.btn-add').attr('disabled', false);
+                                //$('.ver-cotizacion').attr('hidden', false);
+                            } else {
+                                //$("#btnCrearFactura").attr('disabled', false);
+                                //$("#btnFinalizarFactura").attr('disabled', true);
+
+                                //$('.btn-add').attr('disabled', true);
+                                //$('.ver-cotizacion').attr('hidden', true);
+                            }
+
+                        } else {
+
+                            //$("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+            function formatearFecha(fecha){
+                let date = new Date(fecha)
+
+                let day = date.getDate()
+                let month = date.getMonth() + 1
+                let year = date.getFullYear()
+
+                let hours = date.getHours()
+                let minutes = date.getMinutes()
+                let seconds = date.getSeconds()
+                if (month < 10) {
+                    month = "0"+month
+                }
+                if(day<10){
+                    day = "0"+day
+                }
+                if(hours>12){
+                    hours = hours-12
+                    seconds = seconds+" p. m"
+                }else{
+                    seconds = seconds + " a. m"
+                }
+                return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+            }
             function showMensaje(mensaje, tipo) {
                 switch (tipo) {
                     case 'success':
