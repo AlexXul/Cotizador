@@ -18,7 +18,7 @@ namespace Cotizador.Controllers
         private readonly ObtenerFacturaPorId ObtenerFacturaPorId;
         private readonly ObtenerFacturas ObtenerFacturas;
         private readonly EliminarFactura EliminarFactura;
-        private readonly ObtenerProductosIdFactura ObtenerProductosIdFactura;
+        private readonly ObtenerProductosPorIdFactura ObtenerProductosIdFactura;
 
         public FacturaController()
         {
@@ -28,7 +28,7 @@ namespace Cotizador.Controllers
             ObtenerFacturaPorId = new ObtenerFacturaPorId();
             ObtenerFacturas = new ObtenerFacturas();
             EliminarFactura = new EliminarFactura();
-            ObtenerProductosIdFactura = new ObtenerProductosIdFactura();
+            ObtenerProductosIdFactura = new ObtenerProductosPorIdFactura();
         }
         public JsonResult Crear()
         {
@@ -104,12 +104,6 @@ namespace Cotizador.Controllers
         public ActionResult Edit(int id)
         {
             return View();
-        }
-        public ActionResult VerProductos(int id)
-        {
-            IEnumerable<Cotizacion> Cotizaciones = ObtenerProductosIdFactura.Obtener(id);
-
-            return View( Cotizaciones);
         }
 
         // POST: FacturaController/Edit/5

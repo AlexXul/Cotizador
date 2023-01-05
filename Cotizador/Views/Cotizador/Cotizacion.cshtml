@@ -8,7 +8,10 @@
     float totalIva = 0;
     float total = 0;
 }
-
+@if (Model.Any())
+{
+    <input hidden id="facturaId" value="@Model.First().FacturaId" />
+}
 <section class="mb-3" style="display:@(Model.Any()?"":"none")">
     <button class="btn btn-success mt-2" id="btnExportar">Exportar a PDF</button>
 </section>
@@ -96,7 +99,11 @@
             $('#table_factura tfoot').html(cadenaTotales);
 
             $("#btnExportar").click(() => {
+                if(!confirm("Al imprimir esta factura no podrá realizar modificaciones.")){
+                    return false;
+                }
                 AsignarFechaImpresionUltimaFactura()
+                AddProductsToView($("#facturaId").val())
                 setTimeout(function(){
                     ObtenerFactura();
                 }, 500)
@@ -117,11 +124,56 @@
                     html2pdf().set(opt).from(element).save();
                 }, 1000)
                 setTimeout(()=>{
-                    location.reload();
+                    FinalizarUltimaFactura()
+                    window.location.href = "/Cotizador";
                 },5000)
             });
+            function FinalizarUltimaFactura(){
+                $.ajax({
+                    data: {},
+                    type: "GET",
+                    url: "@Url.Action("FinalizarUltimaFactura","Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            bloquearDesbloquear();
+                            showMensaje("Factura finalizada", "info")
+                        } else {
 
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+            function AddProductsToView(idFactura) {
+                $.ajax({
+                    data: {id:idFactura},
+                    type: "GET",
+                    url: "@Url.Action("AddProductsToView", "ViewFacturaProducto")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
 
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                           
+
+                        } else {
+
+                            //$("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
 
             function ObtenerFactura() {
                 $.ajax({

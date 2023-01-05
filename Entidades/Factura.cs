@@ -18,11 +18,6 @@ namespace Entidades
         public bool Finalizado { get; set; } = false;
 
         [NotMapped]
-
-        public String Folio { get; set; }
-
-        [NotMapped]
-
-        public IEnumerable<Producto> Productos { get; set; }
+        public string Folio { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using Entidades;
 
 namespace Negocios.CrudFactura
 {
-   public class ObtenerProductosIdFactura
+   public class ObtenerProductosPorIdFactura
     {
         public IEnumerable<Cotizacion> Obtener( int idFactura)
         {
@@ -31,7 +31,7 @@ namespace Negocios.CrudFactura
                                 SubTotal = c.SubTotal,
                                 FacturaId = f.Id,
                                 Producto = new Producto 
-                                    { Id =f.Id,
+                                    { Id =p.Id,
                                     Nombre = p.Nombre,
                                     Precio = p.Precio,
                                     Descripcion = p.Descripcion,

@@ -20,6 +20,7 @@ namespace Negocios.CrudCotizacion
                                {
                                    Id = f.Id,
                                    ProductoId = p.Id,
+                                   FacturaId= f.FacturaId,
                                    Producto = new Producto
                                    {
                                        Nombre = p.Nombre,
