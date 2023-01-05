@@ -166,6 +166,9 @@
                 });
             })
             $("#btnFinalizarFactura").click(() => {
+                if (!confirm("Al finalizar esta factura no podrá realizar modificaciones.")) {
+                    return false;
+                }
                 $.ajax({
                     data: { },
                     type: "GET",
