@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AccesoDatos;
+using Entidades;
+using Negocios.CrudIVA;
 using System.Threading.Tasks;
 
 namespace Negocios.Utilerias
@@ -20,12 +22,11 @@ namespace Negocios.Utilerias
         }
         public static float ObtenerIVA()
         {
-            using (var dbContext = new AppDbContext())
-            {
-                float ValorIVA = (from d in dbContext.IVAs select d.Valor).First();
-
-                return ValorIVA;
-            }
+            float ValorIVA = 0;
+            IVA i = new LectorIVA().Leer();
+            if (i != null)
+                ValorIVA = i.Valor;
+            return ValorIVA;
         }
     }
 }

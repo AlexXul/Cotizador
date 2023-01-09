@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AccesoDatos;
+using Entidades;
+using Negocios.CrudDescuento;
 using System.Threading.Tasks;
 
 namespace Negocios.Utilerias
@@ -20,12 +22,11 @@ namespace Negocios.Utilerias
         }
         public static float ObtenerDescuento()
         {
-            using (var dbContext = new AppDbContext())
-            {
-                var ValorDescuento = (from d in dbContext.Descuentos select d.Valor).First();
-
-                return ValorDescuento;
-            }
+            float ValorDescuento = 0;
+            Descuento d = new LectorDescuento().Leer();
+            if (d != null)
+                ValorDescuento = d.Valor;
+            return ValorDescuento;
         }
     }
 }
