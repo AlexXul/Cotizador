@@ -21,7 +21,7 @@ namespace Cotizador.Controllers
         private readonly EliminarFactura EliminarFactura;
         private readonly ObtenerFactura ObtenerFactura;
         private readonly ObtenerFacturaPorIdProducto ObtenerFacturaPorIdProducto;
-
+        private readonly BuscadorProducto BuscadorProducto;
         public CotizadorController()
         {
             Lector = new LeerProducto();
@@ -32,6 +32,7 @@ namespace Cotizador.Controllers
             EliminarFactura = new EliminarFactura();
             ObtenerFactura = new ObtenerFactura();
             ObtenerFacturaPorIdProducto = new ObtenerFacturaPorIdProducto();
+            BuscadorProducto = new BuscadorProducto();
         }
         // GET: Cotizar
         public ActionResult Index()
@@ -64,20 +65,7 @@ namespace Cotizador.Controllers
             return View(LectorFactura.Leer());
         }
 
-        // POST: Cotizar/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+         
 
         // GET: Cotizar/Edit/5
         public ActionResult Edit(int id)
@@ -85,42 +73,42 @@ namespace Cotizador.Controllers
             return View();
         }
 
-        // POST: Cotizar/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Cotizar/Delete/5
+       
+ 
         public ActionResult Delete(int id)
         {
             EliminarFactura.Eliminar(ObtenerFactura.Obtener(id));
             return RedirectToAction("VerFactura");
         }
 
-        // POST: Cotizar/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public JsonResult BuscarProducto (string buscado)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Producto pBuscado = BuscadorProducto.Buscar(buscado);
+            return Json(new{ succes=pBuscado!=null,data=pBuscado});
         }
-        
+        public JsonResult AgregarProducto(int cantidad, int id)
+        {
+            if (cantidad == 0 || id == 0)
+            {
+                return Json(new { succes = false,mensaje="Verifique los datos." });
+            }
+           
+            bool existeProductoEnFactura = ObtenerExistenciaProducto.ObtenerExistencia(id);
+            Factura factura = new Factura { Cantidad = cantidad, ProductoId = id };
+
+            if (existeProductoEnFactura)
+            {
+                factura = ObtenerFacturaPorIdProducto.Obtener(id);
+                factura.Cantidad += cantidad;
+                EditarFactura.Editar(factura);
+            }
+            else
+            {
+                CrearFactura.Crear(factura);
+            }
+     
+            return Json(new { succes = true });
+        }
+
     }
 }

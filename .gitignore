@@ -1,4 +1,7 @@
 AccesoDatos/Migrations/
+.vs/
+Entidades/obj/
+
 *.swp
 *.*~
 project.lock.json
