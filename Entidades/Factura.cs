@@ -12,9 +12,12 @@ namespace Entidades
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int ProductoId { get; set; }
-        public Producto Producto { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public DateTime FechaImpresion { get; set; }
 
-        public int Cantidad { get; set; }
+        public bool Finalizado { get; set; } = false;
+
+        [NotMapped]
+        public string Folio { get; set; }
     }
 }

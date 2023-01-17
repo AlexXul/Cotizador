@@ -1,10 +1,12 @@
-﻿using AccesoDatos;
-using Entidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Negocios.Utilerias;
+using Entidades;
+using AccesoDatos;
+
 
 namespace Negocios.CrudFactura
 {
@@ -16,6 +18,9 @@ namespace Negocios.CrudFactura
             {
                 dbContext.Facturas.Remove(factura);
                 dbContext.SaveChanges();
+                EjecutarProcedimientoAlmacenado.Ejecutar("ReestablecerIdFacturas");
+
+
             }
         }
     }

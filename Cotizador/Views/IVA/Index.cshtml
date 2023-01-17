@@ -1,0 +1,36 @@
+﻿@model IVA
+@{
+    ViewData["Title"] = "IVA";
+}
+
+ <section>
+    <div class="row">
+        <div class="col-sm-12 col-lg-4"></div>
+        <div class="card col-sm-12 col-lg-4">
+            <div class="card-header">
+                IVA
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Valor Actual</h5>
+
+                @if (Model.Id == 0)
+                {
+                    <p class="card-text">Sin valor</p>
+                    <a href="@Url.Action("Create","IVA")" class="btn btn-primary form-control">Crear</a>
+                }
+                else
+                {
+                    <p class="card-text">@Model.Valor<span>%</span></p>
+                    <a href="@Url.Action("Edit","IVA",new {id=Model.Id })" class="btn btn-primary form-control">Editar</a>
+                    <a onclick="return confirm('¿Desea Eliminar el IVA?')" href="@Url.Action("Delete","IVA",new {id=Model.Id })" class="btn btn-danger form-control">Eliminar</a>
+                }
+
+
+            </div>
+        </div>
+        <div class="col-sm-12 col-lg-4"></div>
+    </div>
+     
+     
+   
+ </section>

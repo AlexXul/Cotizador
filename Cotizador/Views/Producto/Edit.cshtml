@@ -3,39 +3,50 @@
     ViewData["Title"] = "Editar Producto";
 }
 <section>
-    <form asp-action="Edit" method="post">
-        <div class="form-group">
-            <label asp-for="Nombre" class="control-label"></label>
-            <input asp-for="Nombre" class="form-control" />
-            <span asp-for="Nombre" class="text-danger"></span>
+    <form asp-action="Edit" method="post" class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="form-group col-sm-12 col-lg-4">
+                    <label asp-for="Nombre" class="control-label"></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-12 col-lg-4">
+                    <label asp-for="CodFab" class="control-label"></label>
+                    <input asp-for="CodFab" class="form-control" />
+                    <span asp-for="CodFab" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-12 col-lg-4">
+                    <label asp-for="CodProv" class="control-label"></label>
+                    <input asp-for="CodProv" class="form-control" />
+                    <span asp-for="CodProv" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-12 col-lg-4">
+
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <textarea asp-for="Descripcion" class="form-control">
+
+                    </textarea>
+                    <span asp-for="Descripcion" class="text-danger"></span>
+                    
+                </div>
+                <div class="form-group col-sm-12 col-lg-4">
+                    <label asp-for="CodigoSat" class="control-label"></label>
+                    <input asp-for="CodigoSat" class="form-control" />
+                    <span asp-for="CodigoSat" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-12 col-lg-4">
+                    <label asp-for="Precio" class="control-label"></label>
+                    <input asp-for="Precio" class="form-control" />
+                    <span asp-for="Precio" class="text-danger"></span>
+                </div>
+                <div class="form-group col-sm-12 col-lg-12">
+                    <button class="btn btn-success form-control">Guardar</button>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="CodFab" class="control-label"></label>
-            <input asp-for="CodFab" class="form-control" />
-            <span asp-for="CodFab" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="CodProv" class="control-label"></label>
-            <input asp-for="CodProv" class="form-control" />
-            <span asp-for="CodProv" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Descripcion" class="control-label"></label>
-            <input asp-for="Descripcion" class="form-control" />
-            <span asp-for="Descripcion" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="CodigoSat" class="control-label"></label>
-            <input asp-for="CodigoSat" class="form-control" />
-            <span asp-for="CodigoSat" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="Precio" class="control-label"></label>
-            <input asp-for="Precio" class="form-control" />
-            <span asp-for="Precio" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <button class="btn btn-secondary form-control">Guardar</button>
-        </div>
+        <div class="col-lg-2"></div>
+
     </form>
 </section>

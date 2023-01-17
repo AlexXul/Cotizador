@@ -3,31 +3,41 @@
 @{
     ViewData["Title"] = "Cotizador";
 }
-<section class="row">
-    <div class="col-3"><a class="btn btn-info mb-3" href="/Cotizador/VerFactura">Ver factura</a></div>
-    <div class="col-9">
-        <div class="row">
-            <div class="col-10"></div>
-            <form id="formSearch" onsubmit="buscarProducto()">
-                <input id="producto" placeholder="Producto" />
-                <button form="formSearch" id="btnBuscar" class="btn btn-info">Buscar</button>
-                <input disabled id="productoId" placeholder="Id" />
-                <input id="cantidad" type="number" placeholder="Cantidad" />
+<h1>Cotizador</h1>
+<div class="card mb-4">
+    <div class="card-header">
+        Factura
+    </div>
+    <div class="card-body">
+        <p class="card-text" id="fact-folio"></p>
+        <p class="card-text" id="fact-state"></p>
+    </div>
+    <div class="card-footer text-muted">
+        <button id="btnCrearFactura" class="btn btn-info mb-3 text-white">Crear factura</button>
+        <button id="btnFinalizarFactura" class="btn btn-danger mb-3">Finalizar factura</button>
+        <a class="ver-cotizacion btn btn-info text-white  mb-3" href="/Cotizador/Cotizacion">Ver cotización</a>
+    </div>
+</div>
 
-            </form>
-            <div class="col-2">
-                <button id="btnAgregar" class="btn btn-dark">Agregar</button>
+<section class="row mb-4">
+    <form id="formSearch" class="col-8">
+        <div class="row">
+            <div class="col-4">
+                <div class="input-group">
+                    <input class="form-control" type="text" id="producto" placeholder="Nombre producto" />
+                    <button class="btn btn-primary" form="formSearch" id="btnBuscar"><i class="fas fa-search"></i></button>
+                </div>
             </div>
+           
+            
+            <div class="col-4"><input disabled id="productoId" placeholder="Id" class="form-control" /></div>
+            <div class="col-4"><input id="cantidad" type="number" placeholder="Cantidad" class="form-control" /></div>
         </div>
-        
+    </form>
+    <div class="col-4">
+        <button id="btnAgregar" class="btn btn-success btn-add form-control">Agregar</button>
     </div>
 </section>
-
-<section class="">
-    
-</section>
- 
- 
 
 <table class="table">
     <thead>
@@ -51,14 +61,20 @@
                 <td>@item.Nombre</td>
                 <td>@item.CodFab</td>
                 <td>@item.CodProv</td>
-                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
+                <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;" title="@item.Descripcion">@item.Descripcion</p></td>
                 <td>@item.CodigoSat</td>
-                <td>@item.Precio</td>
+                <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Precio.ToString())</td>
                 <td>
-                    <form asp-action="Agregar" method="get">
-                        <input type="number" name="cantidad" placeholder="Cantidad" value="" />
+                    <form class="form-agregar-prod" method="get" id="form-@item.Id">
+                        <div class="row">
+                            <div class="col-6">
+                                <input class="form-control " type="number" name="cantidad" placeholder="Cantidad" value="" />
+                            </div>
+                            <div class="col-6">
+                                <button onclick="return confirm('¿Desea agregar este Producto?')" class="btn btn-success btn-add form-control">Agregar</button>
+                            </div>
+                        </div> 
                         <input type="hidden" name="id" value="@item.Id" />
-                        <button onclick="return confirm('¿Desea agregar este Producto?')" href="@Url.Action("Agregar","Cotizador")" class="btn btn-success">Agregar</button>
                     </form>
                 </td>
             </tr>
@@ -111,10 +127,12 @@
                         if (d.succes) {
                             $("#producto").val("");
                             $("#cantidad").val("");
-                            $("#productoId").val("Producto agregado");
+                            $("#productoId").val("");
+                            showMensaje("Producto agregado",'success');
+
                         } else {
                             $("#productoId").val(d.mensaje);
-                             
+
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
@@ -123,7 +141,173 @@
                 });
             })
 
+
+
+            $("#btnCrearFactura").click(() => {
+                $.ajax({
+                    data: { },
+                    type: "GET",
+                    url: "@Url.Action("Crear","Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            bloquearDesbloquear();
+                            showMensaje("Factura creada","success")
+                        } else {
+
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            })
+            $("#btnFinalizarFactura").click(() => {
+                if (!confirm("Al finalizar esta factura no podrá realizar modificaciones.")) {
+                    return false;
+                }
+                $.ajax({
+                    data: { },
+                    type: "GET",
+                    url: "@Url.Action("FinalizarUltimaFactura","Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            bloquearDesbloquear();
+                            showMensaje("Factura finalizada", "info")
+                        } else {
+
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            })
+            for (let i = 0; i < $(".form-agregar-prod").length; i++) {
+                $(".form-agregar-prod")[i].addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    $.ajax({
+                        data: { cantidad: $(".form-agregar-prod")[i].cantidad.value, id: $(".form-agregar-prod")[i].id.value },
+                    type: "GET",
+                    url: "@Url.Action("AgregarProducto","Cotizador")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            showMensaje("Producto agregado",'success');
+                            $(".form-agregar-prod")[i].cantidad.value = "";
+                        } else {
+
+
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+
+                })
+            }
+
+            $('.btn-add').attr('disabled', true);
+            $("#btnCrearFactura").attr('disabled', true);
+            $("#btnFinalizarFactura").attr('disabled', true);
+            $('.ver-cotizacion').attr('hidden',true);
+            bloquearDesbloquear();
+
+            function bloquearDesbloquear() {
+                $.ajax({
+                        data: {},
+                    type: "GET",
+                    url: "@Url.Action("ObtenerInfoUltimaFactura", "Factura")",
+                    content: "application/json; charset=utf-8",
+                    dataType: "json",
+                    beforeSend: function () {
+
+                    },
+                    success: function (d) {
+                        if (d.succes) {
+                            $("#fact-folio").html("<b>Folio:</b> "+d.factura.folio)
+                            $("#fact-state").html("<b>Estado</b>: " + (d.factura.finalizado ? 'Finalizado':'Pendiente'));
+                            if (!d.factura.finalizado) {
+                                $('.btn-add').attr('disabled', false);
+                                $("#btnCrearFactura").attr('disabled', true);
+                                $("#btnFinalizarFactura").attr('disabled', false);
+                                $('.btn-add').attr('disabled', false);
+                                $('.ver-cotizacion').attr('hidden', false);
+                            } else {
+                                $("#btnCrearFactura").attr('disabled', false);
+                                $("#btnFinalizarFactura").attr('disabled', true);
+
+                                $('.btn-add').attr('disabled', true);
+                                $('.ver-cotizacion').attr('hidden', true);
+                            }
+
+                        } else {
+
+                            $("#btnCrearFactura").attr('disabled', false);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('Error!!');
+                    }
+                });
+            }
+
+
+
+            function showMensaje(mensaje, tipo) {
+                switch (tipo) {
+                    case 'success':
+                        iziToast.success({
+                            title: 'OK',
+                            position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter
+                            message: mensaje,
+                        });
+                        break;
+                    case 'info':
+                        iziToast.info({
+                            title: 'Info',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'warning':
+                        iziToast.warning({
+                            title: 'Caution',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    case 'error':
+                        iziToast.error({
+                            title: 'Error',
+                            position: 'topRight',
+                            message: mensaje,
+                        });
+                        break;
+                    default:
+                        console.log('Opción incorrecta');
+                }
+
+
+
+
+
+            }
+
         })
+
 
     </script>
 }

@@ -1,7 +1,7 @@
 ﻿using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Negocios;
+using Negocios.CrudProducto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +72,11 @@ namespace Cotizador.Controllers
             return RedirectToAction("Index");
         }
 
-      
-        
+        public JsonResult BuscarProducto(int buscado)
+        {
+            Producto pBuscado = Recuperador.Obtener(buscado);
+            return Json(new { succes = pBuscado != null, data = pBuscado });
+        }
+
     }
 }

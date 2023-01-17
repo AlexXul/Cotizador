@@ -21,17 +21,25 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Nombre</td>
-                <td>@item.CodFab</td>
-                <td>@item.CodProv</td>
-                <td ><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
-                <td>@item.CodigoSat</td>
-                <td>@item.Precio</td>
-
-                <td><a href="@Url.Action("Edit","Producto",new {id=item.Id })" class="btn btn-success">Editar</a>| <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Producto",new {id=item.Id })" class="btn btn-success">Eliminar</a></td>
-            </tr>
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Nombre</td>
+            <td>@item.CodFab</td>
+            <td>@item.CodProv</td>
+            <td><p style="text-overflow: ellipsis; width: 200px;  padding: 2px 5px;">@item.Descripcion</p></td>
+            <td>@item.CodigoSat</td>
+            <td>$@Negocios.Utilerias.FormatearDecimal.Formatear(item.Precio.ToString())</td>
+            <td>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="@Url.Action("Edit","Producto",new {id=item.Id })" class="btn btn-primary form-control">Editar</a>
+                    </div>
+                    <div class="col-6">
+                        <a onclick="return confirm('¿Desea Eliminar este Producto?')" href="@Url.Action("Delete","Producto",new {id=item.Id })" class="btn btn-danger form-control">Eliminar</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
         }
     </tbody>
     <tfoot>
